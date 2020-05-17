@@ -90,62 +90,62 @@
   {Support for syllables in the Devanagari script (JV)}
 %    \end{macrocode}
 %    \begin{macrocode}
-\tl_const:Nn \c_foo_joining_tl { ्}
-\tl_const:Nn \c_foo_diacritics_tl {ािीुूेैोौंःॢृॅँ}
-\tl_new:N \l_foo_input_tl
-\tl_new:N \l_foo_tmp_tl
-\bool_new:N \l_foo_prev_joining_bool
-\seq_new:N \l_foo_char_seq
+\tl_const:Nn \c_@@_joining_tl { ्}
+\tl_const:Nn \c_@@_diacritics_tl {ािीुूेैोौंःॢृॅँ}
+\tl_new:N \l_@@_input_tl
+\tl_new:N \l_@@_tmp_tl
+\bool_new:N \l_@@_prev_joining_bool
+\seq_new:N \l_@@_char_seq
 \prg_generate_conditional_variant:Nnn \tl_if_in:Nn { No } { TF }
-\cs_new:Npn \foo_str_getchar:nn #1 #2
+\cs_new:Npn \@@_str_getchar:nn #1 #2
   {
-    \seq_clear:N \l_foo_char_seq
-    \bool_set_false:N \l_foo_prev_joining_bool
-    \tl_set:Nn \l_foo_input_tl {#1}
-    \tl_map_variable:NNn \l_foo_input_tl \l_foo_map_tl
+    \seq_clear:N \l_@@_char_seq
+    \bool_set_false:N \l_@@_prev_joining_bool
+    \tl_set:Nn \l_@@_input_tl {#1}
+    \tl_map_variable:NNn \l_@@_input_tl \l_@@_map_tl
       {
-        \tl_if_in:NoTF \c_foo_diacritics_tl {\l_foo_map_tl}
+        \tl_if_in:NoTF \c_@@_diacritics_tl {\l_@@_map_tl}
           {
             % It is a diacritic.
-            \seq_pop_right:NN \l_foo_char_seq \l_foo_tmp_tl
-            \seq_put_right:Nx \l_foo_char_seq { \l_foo_tmp_tl \l_foo_map_tl }
+            \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
+            \seq_put_right:Nx \l_@@_char_seq { \l_@@_tmp_tl \l_@@_map_tl }
           }
           {
-            \tl_if_eq:NNTF \l_foo_map_tl \c_foo_joining_tl
+            \tl_if_eq:NNTF \l_@@_map_tl \c_@@_joining_tl
               {
                 % It is the joining character
-                \seq_pop_right:NN \l_foo_char_seq \l_foo_tmp_tl
-                \seq_put_right:Nx \l_foo_char_seq 
-                  { \l_foo_tmp_tl \l_foo_map_tl }
-                \bool_set_true:N \l_foo_prev_joining_bool
+                \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
+                \seq_put_right:Nx \l_@@_char_seq 
+                  { \l_@@_tmp_tl \l_@@_map_tl }
+                \bool_set_true:N \l_@@_prev_joining_bool
               }
               {
                 % It is a normal character
-                \bool_if:NTF \l_foo_prev_joining_bool
+                \bool_if:NTF \l_@@_prev_joining_bool
                   {
                     % but previously there is a joining character
-                    \seq_pop_right:NN \l_foo_char_seq \l_foo_tmp_tl
-                    \seq_put_right:Nx \l_foo_char_seq 
-                      { \l_foo_tmp_tl \l_foo_map_tl }
-                    \bool_set_false:N \l_foo_prev_joining_bool
+                    \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
+                    \seq_put_right:Nx \l_@@_char_seq 
+                      { \l_@@_tmp_tl \l_@@_map_tl }
+                    \bool_set_false:N \l_@@_prev_joining_bool
                   }
                   {
                     % Previously: nothing special.
-                    \seq_put_right:Nx \l_foo_char_seq { \l_foo_map_tl }
+                    \seq_put_right:Nx \l_@@_char_seq { \l_@@_map_tl }
                   }
               }
           }
         % Plus two just to guard against breaking too soon
-        \int_compare:nNnT {\seq_count:N \l_foo_char_seq} > {#2 + 2}
+        \int_compare:nNnT {\seq_count:N \l_@@_char_seq} > {#2 + 2}
           {
             \tl_map_break:
           }
       }
-    \seq_item:Nn \l_foo_char_seq {#2}
+    \seq_item:Nn \l_@@_char_seq {#2}
   }
 \NewDocumentCommand \mystrchar {mm}
   {
-    \foo_str_getchar:nn {#1} {#2}
+    \@@_str_getchar:nn {#1} {#2}
   }
 %</package>
 %    \end{macrocode}
