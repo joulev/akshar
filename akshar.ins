@@ -1,0 +1,11 @@
+\input l3docstrip.tex
+
+\keepsilent
+\askforoverwritefalse
+
+\usedir{tex/latex/\jobname}
+\generate{
+  \file{\jobname.sty}{\from{\jobname.dtx}{package}}
+}
+
+\endbatchfile

@@ -1,0 +1,123 @@
+% \iffalse
+%<*driver>
+\documentclass{l3doc}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont[Scale=0.9,Script=Devanagari]{Shobhika}
+\setsansfont{Linux Biolinum}
+\setmathfont{Linux Libertine}
+\setmonofont[Scale=0.85]{Hack NF}
+\renewcommand\meta[1]{$\langle${\itshape\rmfamily#1}$\rangle$}
+\usepackage{\jobname}
+\def\PackageName{\jobname}
+\def\PackageVersion{0.1}
+\def\PackageDate{2020/05/17}
+\parindent=0pt\relax
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+\DocInput{\PackageName.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+%
+%
+% \title{The \pkg{\PackageName} package}
+% \author{Vu Van Dung}
+% \date{Version \PackageVersion\qquad---\qquad\PackageDate}
+%
+% \maketitle
+%
+% \tableofcontents
+%
+% \begin{documentation}
+% \section{User guide}
+% Nothing here yet! Just a test:
+%
+% \mystrchar{aक्षbकौcक्ष्यd}{1}\par
+% \mystrchar{aक्षbकौcक्ष्यd}{2}\par
+% \mystrchar{aक्षbकौcक्ष्यd}{3}\par
+% \mystrchar{aक्षbकौcक्ष्यd}{4}\par
+% \mystrchar{aक्षbकौcक्ष्यd}{5}\par
+% \mystrchar{aक्षbकौcक्ष्यd}{6}\par
+% \mystrchar{aक्षbकौcक्ष्यd}{7}\par
+% \end{documentation}
+% 
+% \StopEventually{\PrintIndex}
+% 
+% \begin{implementation}
+% \section{Implementation}
+% Declare the package.
+%    \begin{macrocode}
+%<@@=akshar>
+%<*package>
+\RequirePackage{fontspec}
+\ProvidesExplPackage {akshar} {2020/05/17} {0.1}
+  {Support for syllables in the Devanagari script (JV)}
+%    \end{macrocode}
+% The code.
+%    \begin{macrocode}
+\tl_const:Nn \c_foo_joining_tl { ्}
+\tl_const:Nn \c_foo_diacritics_tl {ािीुूेैोौंःॢृॅँ}
+\tl_new:N \l_foo_input_tl
+\tl_new:N \l_foo_tmp_tl
+\bool_new:N \l_foo_prev_joining_bool
+\seq_new:N \l_foo_char_seq
+\prg_generate_conditional_variant:Nnn \tl_if_in:Nn { No } { TF }
+\cs_new:Npn \foo_str_getchar:nn #1 #2
+  {
+    \seq_clear:N \l_foo_char_seq
+    \bool_set_false:N \l_foo_prev_joining_bool
+    \tl_set:Nn \l_foo_input_tl {#1}
+    \tl_map_variable:NNn \l_foo_input_tl \l_foo_map_tl
+      {
+        \tl_if_in:NoTF \c_foo_diacritics_tl {\l_foo_map_tl}
+          {
+            % It is a diacritic.
+            \seq_pop_right:NN \l_foo_char_seq \l_foo_tmp_tl
+            \seq_put_right:Nx \l_foo_char_seq { \l_foo_tmp_tl \l_foo_map_tl }
+          }
+          {
+            \tl_if_eq:NNTF \l_foo_map_tl \c_foo_joining_tl
+              {
+                % It is the joining character
+                \seq_pop_right:NN \l_foo_char_seq \l_foo_tmp_tl
+                \seq_put_right:Nx \l_foo_char_seq 
+                  { \l_foo_tmp_tl \l_foo_map_tl }
+                \bool_set_true:N \l_foo_prev_joining_bool
+              }
+              {
+                % It is a normal character
+                \bool_if:NTF \l_foo_prev_joining_bool
+                  {
+                    % but previously there is a joining character
+                    \seq_pop_right:NN \l_foo_char_seq \l_foo_tmp_tl
+                    \seq_put_right:Nx \l_foo_char_seq 
+                      { \l_foo_tmp_tl \l_foo_map_tl }
+                    \bool_set_false:N \l_foo_prev_joining_bool
+                  }
+                  {
+                    % Previously: nothing special.
+                    \seq_put_right:Nx \l_foo_char_seq { \l_foo_map_tl }
+                  }
+              }
+          }
+        % Plus two just to guard against breaking too soon
+        \int_compare:nNnT {\seq_count:N \l_foo_char_seq} > {#2 + 2}
+          {
+            \tl_map_break:
+          }
+      }
+    \seq_item:Nn \l_foo_char_seq {#2}
+  }
+\NewDocumentCommand \mystrchar {mm}
+  {
+    \foo_str_getchar:nn {#1} {#2}
+  }
+%</package>
+%    \end{macrocode}
+% \end{implementation}
+%
+% \Finale
