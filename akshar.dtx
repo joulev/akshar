@@ -75,70 +75,116 @@
 %<@@=akshar>
 %<*package>
 %    \end{macrocode}
-% Declare the package.
+% Declare the package. By loading \pkg{fontspec}, \pkg{xparse}, and in turn, 
+% \pkg{expl3}, are also loaded.
 %    \begin{macrocode}
 \RequirePackage{fontspec}
 \ProvidesExplPackage {akshar} {2020/05/17} {0.1}
   {Support for syllables in the Devanagari script (JV)}
 %    \end{macrocode}
+% \begin{variable}{\c_@@_joining_tl, \c_@@_diacritics_tl}
+% These variables store the special characters we need to take into account:
+% \begin{itemize}
+%   \item \cs{c_@@_joining_tl} is the ``connecting'' character  ्.
+%   \item \cs{c_@@_diacritics_tl} is a list of all diacritics: ािीुूेैोौंःॢृॅँ (they are 
+%    ा,  ि,  ी,  ु,  ू,  े,  ै,  ो,  ौ,  ं,  ः,  ॢ,  ृ,  ॅ,  ँ without the 
+%   commas).
+% \end{itemize}
 %    \begin{macrocode}
 \tl_const:Nn \c_@@_joining_tl { ्}
 \tl_const:Nn \c_@@_diacritics_tl {ािीुूेैोौंःॢृॅँ}
-\tl_new:N \l_@@_input_tl
-\tl_new:N \l_@@_tmp_tl
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\l_@@_prev_joining_bool}
+% When we get to a normal character, we need to know whether it is joined, i.e. 
+% whether the previous character is the joining character. This boolean variable 
+% takes care of that.
+%    \begin{macrocode}
 \bool_new:N \l_@@_prev_joining_bool
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\l_@@_char_seq}
+% This local sequence stores the output of the converter.
+%    \begin{macrocode}
 \seq_new:N \l_@@_char_seq
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\l_@@_tmp_tl}
+% A temporary token list, used during the modification of the sequence.
+%    \begin{macrocode}
+\tl_new:N \l_@@_tmp_tl
+%    \end{macrocode}
+% \end{variable}
+% \begin{macro}[TF]{\tl_if_in:No}
+% When we get to a character which is not the joining one, we need to know if 
+% it is a diacritic. The current character is stored in a variable, so an 
+% expanded variant is needed. We only need it to expand only \textbf{o}nce.
+%    \begin{macrocode}
 \prg_generate_conditional_variant:Nnn \tl_if_in:Nn { No } { TF }
-\cs_new:Npn \@@_str_getchar:nn #1 #2
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\akshar_convert:n}
+% This converts |#1| to a sequence of \emph{true} Devanagari characters. The 
+% sequence is \cs{l_@@_char_seq}.
+%    \begin{macrocode}
+\cs_new:Npn \akshar_convert:n #1
   {
+%    \end{macrocode}
+% Clear anything stored in advance. We don't want different calls of the 
+% function to conflict with each other.
+%    \begin{macrocode}
     \seq_clear:N \l_@@_char_seq
     \bool_set_false:N \l_@@_prev_joining_bool
-    \tl_set:Nn \l_@@_input_tl {#1}
-    \tl_map_variable:NNn \l_@@_input_tl \l_@@_map_tl
+%    \end{macrocode}
+% Loop through every token of the input.
+%    \begin{macrocode}
+    \tl_map_variable:NNn {#1} \l_@@_map_tl
       {
         \tl_if_in:NoTF \c_@@_diacritics_tl {\l_@@_map_tl}
           {
-            % It is a diacritic.
+%    \end{macrocode}
+% It is a diacritic. We append the current diacritic to the last item of the 
+% sequence instead of pushing the diacritic to a new sequence item.
+%    \begin{macrocode}
             \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
-            \seq_put_right:Nx \l_@@_char_seq { \l_@@_tmp_tl \l_@@_map_tl }
+            \seq_put_right:Nx \l_@@_char_seq 
+              { \l_@@_tmp_tl \l_@@_map_tl }
           }
           {
             \tl_if_eq:NNTF \l_@@_map_tl \c_@@_joining_tl
               {
-                % It is the joining character
+%    \end{macrocode}
+% In this case, the character is the joining character,  ्. What we do is 
+% similar to the above case, but \cs{l_@@_prev_joining_bool} is set to true so 
+% that the next character is also appended to this item.
+%    \begin{macrocode}
                 \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
                 \seq_put_right:Nx \l_@@_char_seq 
                   { \l_@@_tmp_tl \l_@@_map_tl }
                 \bool_set_true:N \l_@@_prev_joining_bool
               }
               {
-                % It is a normal character
+%    \end{macrocode}
+% Now the character is normal. We see if we can push to a new item or not. It 
+% depends on the boolean variable.
+%    \begin{macrocode}
                 \bool_if:NTF \l_@@_prev_joining_bool
                   {
-                    % but previously there is a joining character
                     \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
                     \seq_put_right:Nx \l_@@_char_seq 
                       { \l_@@_tmp_tl \l_@@_map_tl }
                     \bool_set_false:N \l_@@_prev_joining_bool
                   }
                   {
-                    % Previously: nothing special.
                     \seq_put_right:Nx \l_@@_char_seq { \l_@@_map_tl }
                   }
               }
           }
-        % Plus two just to guard against breaking too soon
-        \int_compare:nNnT {\seq_count:N \l_@@_char_seq} > {#2 + 2}
-          {
-            \tl_map_break:
-          }
       }
-    \seq_item:Nn \l_@@_char_seq {#2}
   }
-\NewDocumentCommand \mystrchar {mm}
-  {
-    \@@_str_getchar:nn {#1} {#2}
-  }
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
 %</package>
 %    \end{macrocode}
 % \end{implementation}
