@@ -1,6 +1,7 @@
 % \iffalse
 %<*driver>
 \documentclass{l3doc}
+\usepackage[margin=1cm,left=7cm,bottom=1.5cm]{geometry}
 \usepackage{fontspec}
 \usepackage{unicode-math}
 \setmainfont[Scale=0.9,Script=Devanagari]{Shobhika}
@@ -9,10 +10,19 @@
 \setmonofont[Scale=0.85]{Hack NF}
 \renewcommand\meta[1]{$\langle${\itshape\rmfamily#1}$\rangle$}
 \usepackage{akshar}
+\usepackage[listings]{tcolorbox}
+\newtcblisting{codeexample}[1][]{size=minimal,
+  sidebyside gap=1cm,lefthand width=6.5cm,lower separated=false,
+  fontupper=\raggedleft,colback=white,colframe=white,
+  verbatim ignore percent,grow to left by=7cm,text side listing,
+  listing options={basicstyle=\small,keywordstyle=\small,columns=fullflexible,
+  numbers=left,numberstyle=\sffamily\tiny\color{gray},stepnumber=1,numbersep=5pt},#1}
+\pgfkeys{/tcb/.cd,code only/.code={\pgfkeysalso{listing only,grow to left by=-5mm}}}
 \def\PackageName{\jobname}
 \def\PackageVersion{0.1}
 \def\PackageDate{2020/05/17}
 \parindent=0pt\relax
+\IndexMin=100pt\relax
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -31,10 +41,30 @@
 % \maketitle
 %
 % \tableofcontents
+% \parskip=1ex
 %
 % \begin{documentation}
+% \section{Introduction}
+% When dealing with processing strings in the Devanagari script, normal \LaTeX\ 
+% commands usually find some difficulties in distinguishing ``normal'' 
+% characters, like क, and ``special'' characters, for example  ् or ी. Let's 
+% consider this example code:
+% \begin{codeexample}[]
+%\ExplSyntaxOn
+%\tl_set:Nn \l_tmpa_tl { की }
+%\tl_count:N \l_tmpa_tl \c_space_token tokens.
+%\ExplSyntaxOff
+% \end{codeexample}
+% The output is 2, but the number of characters in it is only one! The reason 
+% is quite simple: the compiler treats ी as a normal character, which it isn't.
+%
+% To tackle that, this package provides \pkg{expl3} functions to ``convert'' a 
+% given string, written in the Devanagari script, to a sequence of token lists. 
+% each of these token lists is a ``true'' Devanagari character. You can now do 
+% anything you want with this sequence; and this package does provide some 
+% front-end macros for some simple actions on the input string.
+%
 % \section{User guide}
-% Nothing here yet! Just a test:
 %
 % \mystrchar{aक्षbकौcक्ष्यd}{1}\par
 % \mystrchar{aक्षbकौcक्ष्यd}{2}\par
@@ -49,15 +79,16 @@
 % 
 % \begin{implementation}
 % \section{Implementation}
-% Declare the package.
 %    \begin{macrocode}
 %<@@=akshar>
 %<*package>
+%    \end{macrocode}
+% Declare the package.
+%    \begin{macrocode}
 \RequirePackage{fontspec}
 \ProvidesExplPackage {akshar} {2020/05/17} {0.1}
   {Support for syllables in the Devanagari script (JV)}
 %    \end{macrocode}
-% The code.
 %    \begin{macrocode}
 \tl_const:Nn \c_foo_joining_tl { ्}
 \tl_const:Nn \c_foo_diacritics_tl {ािीुूेैोौंःॢृॅँ}
