@@ -69,7 +69,7 @@
 % front-end macros for some simple actions on the input string.
 %
 % \section{User manual}
-% \subsection{\LaTeXe\ macros}
+% \subsection{\LaTeXe\ macros}\label{latex2e-macros}
 % \begin{function}{\aksharStrLen}
 %   \begin{syntax}
 %     \cs{aksharStrLen} \marg{token list}
@@ -96,6 +96,8 @@
 % \end{codeexample}
 % \subsection{\pkg{expl3} functions}
 % This section assumes that you have a basic knowledge in \LaTeX3 programming.
+% All macros in \ref{latex2e-macros} directly depend on the following function,
+% so it is much more powerful than all features we have described above.
 % \begin{function}{
 %    \akshar_convert:Nn, \akshar_convert:cn, 
 %    \akshar_convert:Nx, \akshar_convert:cx}
@@ -239,7 +241,7 @@
     \seq_set_eq:NN #1 \l_@@_char_seq
   }
 %    \end{macrocode}
-% Generating variants might be helpful for some.
+% Generate variants that might be helpful for some.
 %    \begin{macrocode}
 \cs_generate_variant:Nn \akshar_convert:Nn { cn, Nx, cx }
 %    \end{macrocode}
