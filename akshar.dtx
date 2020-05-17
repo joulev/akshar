@@ -65,6 +65,10 @@
 % front-end macros for some simple actions on the input string.
 %
 % \section{User guide}
+% \ExplSyntaxOn
+% \akshar_convert:Nn \l_tmpa_seq {abcdeasf}
+% \seq_log:N \l_tmpa_seq
+% \ExplSyntaxOff
 % \end{documentation}
 % 
 % \StopEventually{\PrintIndex}
@@ -123,11 +127,12 @@
 \prg_generate_conditional_variant:Nnn \tl_if_in:Nn { No } { TF }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\akshar_convert:n}
-% This converts |#1| to a sequence of \emph{true} Devanagari characters. The 
-% sequence is \cs{l_@@_char_seq}.
+% \begin{macro}{\akshar_convert:Nn}
+% This converts |#2| to a sequence of \emph{true} Devanagari characters. The 
+% sequence is set to |#1|, which should be a sequence variable. The assignment 
+% is local.
 %    \begin{macrocode}
-\cs_new:Npn \akshar_convert:n #1
+\cs_new:Npn \akshar_convert:Nn #1 #2
   {
 %    \end{macrocode}
 % Clear anything stored in advance. We don't want different calls of the 
@@ -138,7 +143,7 @@
 %    \end{macrocode}
 % Loop through every token of the input.
 %    \begin{macrocode}
-    \tl_map_variable:NNn {#1} \l_@@_map_tl
+    \tl_map_variable:NNn {#2} \l_@@_map_tl
       {
         \tl_if_in:NoTF \c_@@_diacritics_tl {\l_@@_map_tl}
           {
@@ -181,7 +186,19 @@
               }
           }
       }
+%    \end{macrocode}
+% Set |#1| to \cs{l_@@_char_seq}. The assignment is local, and I have not found 
+% a way to automatically pick \cs{seq_set_eq} or \cs{seq_gset_eq} based on the 
+% name of the sequence variable.
+%    \begin{macrocode}
+    \seq_set_eq:NN #1 \l_@@_char_seq
   }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\akshar_convert:cn, \akshar_convert:Nx, \akshar_convert:cx}
+% Generating variants might be helpful for some.
+%    \begin{macrocode}
+\cs_generate_variant:Nn \akshar_convert:Nn { cn, Nx, cx }
 %    \end{macrocode}
 % \end{macro}
 %    \begin{macrocode}
