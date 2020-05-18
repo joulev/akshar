@@ -9,3 +9,7 @@ This package is still experimental and not yet published to CTAN, so please wait
 ## How to use
 
 You can read the documentation (`akshar.pdf`) for more information about how to use the package. You can view it directly in GitHub, or you can visit [here](https://nbviewer.jupyter.org/github/joulev/akshar/blob/master/akshar.pdf).
+
+## License
+
+The LaTeX Project Public License, version 1.3c or later.
