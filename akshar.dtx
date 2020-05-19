@@ -196,6 +196,10 @@
 %    \end{macrocode}
 % \end{variable}
 % \subsection{Utilities}
+% ^^A Remove "This function is documented on page ??"
+% \ExplSyntaxOn
+% \cs_set_protected:Npn \__codedoc_print_documented: {}
+% \ExplSyntaxOff
 % \begin{macro}[TF]{\tl_if_in:No}
 % When we get to a character which is not the joining one, we need to know if 
 % it is a diacritic. The current character is stored in a variable, so an 
@@ -205,6 +209,29 @@
 %    \end{macrocode}
 % \end{macro}
 % \subsection{The \cs{akshar_convert} function}
+% ^^A Restore the status quo
+% \ExplSyntaxOn
+% \cs_set_protected:Npn \__codedoc_print_documented:
+%   {
+%     \seq_gset_filter:NNn \g__codedoc_nested_names_seq
+%       \g__codedoc_nested_names_seq
+%       { ! \__codedoc_if_macro_internal_p:n {##1} }
+%     \seq_if_empty:NF \g__codedoc_nested_names_seq
+%       {
+%         \int_set:Nn \l__codedoc_tmpa_int
+%           { \seq_count:N \g__codedoc_nested_names_seq }
+%         \int_compare:nNnTF \l__codedoc_tmpa_int = 1 {~This~} {~These~}
+%         \bool_if:NTF \l__codedoc_macro_var_bool {variable} {function}
+%         \int_compare:nNnTF \l__codedoc_tmpa_int = 1 {~is~} {s~are~}
+%         documented~on~page~
+%         \__codedoc_get_hyper_target:xN
+%           { \seq_item:Nn \g__codedoc_nested_names_seq { 1 } }
+%           \l__codedoc_tmpa_tl
+%         \exp_args:Nx \pageref { \l__codedoc_tmpa_tl } .
+%       }
+%     \seq_gclear:N \g__codedoc_nested_names_seq
+%   }
+% \ExplSyntaxOff
 % \begin{macro}{\akshar_convert:Nn, \akshar_convert:cn,
 %               \akshar_convert:Nx, \akshar_convert:cx}
 % This converts |#2| to a sequence of \emph{true} Devanagari characters. The 
