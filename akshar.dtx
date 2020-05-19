@@ -32,12 +32,15 @@
 \usepackage[margin=1cm,left=7cm,bottom=1.5cm]{geometry}
 \usepackage[libertine]{newtxmath}
 \usepackage{fontspec}
-\setmainfont[Scale=0.9,Script=Devanagari]{Shobhika}
+\setmainfont[Scale=0.9,Script=Devanagari]{Siddhanta}
 \setsansfont{Linux Biolinum}
 \setmonofont[Scale=0.85]{Hack NF}
 \renewcommand\meta[1]{$\langle${\itshape\rmfamily#1}$\rangle$}
 \usepackage{akshar}
 \usepackage[listings]{tcolorbox}
+\definecolor{myred}{HTML}{C0392B}
+\definecolor{myblue}{HTML}{2980B9}
+\definecolor{mygreen}{HTML}{27AE60}
 \newtcblisting{codeexample}[1][]{size=minimal,
   sidebyside gap=1cm,lefthand width=6.5cm,lower separated=false,
   fontupper=\raggedleft,colback=white,colframe=white,
@@ -45,6 +48,22 @@
   listing options={basicstyle=\small,keywordstyle=\small,columns=fullflexible,
   numbers=left,numberstyle=\sffamily\tiny\color{gray},stepnumber=1,numbersep=5pt},#1}
 \pgfkeys{/tcb/.cd,code only/.code={\pgfkeysalso{listing only,grow to left by=-5mm}}}
+\hypersetup{linkcolor=mygreen,linktoc=page}
+^^A Hacking the index a bit.
+\IndexPrologue
+  {
+    \section*{Index}
+    \markboth{Index}{Index}
+    \addcontentsline{toc}{section}{Index}
+    The italic numbers denote the pages where the 
+    corresponding entry is described, 
+    numbers underlined point to the definition, 
+    all others indicate the places where it is used.
+  }
+\usepackage{sectsty}
+\sectionfont{\LARGE\color{myred}}
+\subsectionfont{\large\color{myblue}} 
+\let\bfseries\mdseries^^A For consistency
 \def\PackageName{\jobname}
 \def\PackageVersion{0.1}
 \def\PackageDate{2020/05/17}
@@ -165,8 +184,10 @@
 % These variables store the special characters we need to take into account:
 % \begin{itemize}
 %   \item \cs{c_@@_joining_tl} is the ``connecting'' character  ्.
-%   \item \cs{c_@@_diacritics_tl} is the list of all diacritics.
-%   ^^A The font rendering issue is so bad that I gave up fixing ;) Please see #1.
+%   \item \cs{c_@@_diacritics_tl} is the list of all diacritics: ा,  ि,  ी,  ु, 
+%    ू,  े,  ै,  ो,  ौ,  ं,  ः,  ॢ,  ृ,  ॅ,  ँ,  ़,  ॆ,  ॊ,  ॉ,  ॎ,  ॏ,  ॑,
+%     ॒,  ॓,  ॔,  ॕ,  ॖ,  ॗ,  ॄ,  ऺ,  ऻ,  ꣠,  ꣡,  ꣢,  ꣣,  ꣤,  ꣥,  ꣦,  ꣧,  ꣨,  ꣩, 
+%    ꣪,  ꣫,  ꣬,  ꣭,  ꣮,  ꣯,  ꣰,  ꣱,  ꣿ.
 % \end{itemize}
 %    \begin{macrocode}
 \tl_const:Nn \c_@@_joining_tl { ्}
