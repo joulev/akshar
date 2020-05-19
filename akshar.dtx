@@ -106,9 +106,9 @@
 % Return the number of Devanagari characters in the \meta{token list}.
 % \end{function}
 % \begin{codeexample}[]
-%There are \aksharStrLen{ घघाघिघीघुघूघेघै } characters in घघाघिघीघुघूघेघै.\par
+%There are \aksharStrLen{ नमस्कार } characters in नमस्कार.\par
 %\ExplSyntaxOn
-%\pkg{expl3}~returns~\tl_count:n { घघाघिघीघुघूघेघै },~which~is~wrong.
+%\pkg{expl3}~returns~\tl_count:n { नमस्कार },~which~is~wrong.
 %\ExplSyntaxOff
 % \end{codeexample}
 % \begin{function}{\aksharStrChar}
@@ -118,9 +118,9 @@
 % Return the $n$-th character of the token list.
 % \end{function}
 % \begin{codeexample}[]
-%4th character of घघाघिघीघुघूघेघै is \aksharStrChar{ घघाघिघीघुघूघेघै}{4}.\par
+%3rd character of नमस्कार is \aksharStrChar{ नमस्कार}{3}.\par
 %\ExplSyntaxOn
-%It~is~not~\tl_item:nn { घघाघिघीघुघूघेघै } {4}.
+%It~is~not~\tl_item:nn { नमस्कार } {3}.
 %\ExplSyntaxOff
 % \end{codeexample}
 % \subsection{\pkg{expl3} functions}
@@ -139,7 +139,7 @@
 % \end{function}
 % \begin{codeexample}[]
 %\ExplSyntaxOn
-%\akshar_convert:Nn \l_tmpa_seq { घघाघिघीघुघूघेघै }
+%\akshar_convert:Nn \l_tmpa_seq { नमस्कार }
 %\seq_use:Nnnn \l_tmpa_seq { ~and~ } { ,~ } { ,~and~ }
 %\ExplSyntaxOff
 % \end{codeexample}
