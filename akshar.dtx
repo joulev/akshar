@@ -165,13 +165,17 @@
 % These variables store the special characters we need to take into account:
 % \begin{itemize}
 %   \item \cs{c_@@_joining_tl} is the ``connecting'' character  ्.
-%   \item \cs{c_@@_diacritics_tl} is a list of all diacritics: ािीुूेैोौंःॢृॅँ (they are 
-%    ा,  ि,  ी,  ु,  ू,  े,  ै,  ो,  ौ,  ं,  ः,  ॢ,  ृ,  ॅ,  ँ without the 
-%   commas).
+%   \item \cs{c_@@_diacritics_tl} is the list of all diacritics.
+%   ^^A The font rendering issue is so bad that I gave up fixing ;) Please see #1.
 % \end{itemize}
 %    \begin{macrocode}
 \tl_const:Nn \c_@@_joining_tl { ्}
-\tl_const:Nn \c_@@_diacritics_tl {ािीुूेैोौंःॢृॅँ}
+\tl_const:Nn \c_@@_diacritics_tl
+  {
+    ा,  ि,  ी,  ु,  ू,  े,  ै,  ो,  ौ,  ं,  ः,  ॢ,  ृ,  ॅ,  ँ,  ़,  ॆ,  ॊ, 
+    ॉ,  ॎ,  ॏ,  ॑,  ॒,  ॓,  ॔,  ॕ,  ॖ,  ॗ,  ॄ,  ऺ,  ऻ,  ꣠,  ꣡,  ꣢,  ꣣,  ꣤,  ꣥, 
+    ꣦,  ꣧,  ꣨,  ꣩,  ꣪,  ꣫,  ꣬,  ꣭,  ꣮,  ꣯,  ꣰,  ꣱,  ꣿ
+  }
 %    \end{macrocode}
 % \end{variable}
 % \begin{variable}{\l_@@_prev_joining_bool}
