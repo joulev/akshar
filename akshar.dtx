@@ -160,6 +160,7 @@
 \ProvidesExplPackage {akshar} {2020/05/17} {0.1}
   {Support for syllables in the Devanagari script (JV)}
 %    \end{macrocode}
+% \subsection{Variable declarations}
 % \begin{variable}{\c_@@_joining_tl, \c_@@_diacritics_tl}
 % These variables store the special characters we need to take into account:
 % \begin{itemize}
@@ -194,6 +195,7 @@
 \seq_new:N \l_@@_tmp_seq
 %    \end{macrocode}
 % \end{variable}
+% \subsection{Utilities}
 % \begin{macro}[TF]{\tl_if_in:No}
 % When we get to a character which is not the joining one, we need to know if 
 % it is a diacritic. The current character is stored in a variable, so an 
@@ -202,6 +204,7 @@
 \prg_generate_conditional_variant:Nnn \tl_if_in:Nn { No } { TF }
 %    \end{macrocode}
 % \end{macro}
+% \subsection{The \cs{akshar_convert} function}
 % \begin{macro}{\akshar_convert:Nn, \akshar_convert:cn,
 %               \akshar_convert:Nx, \akshar_convert:cx}
 % This converts |#2| to a sequence of \emph{true} Devanagari characters. The 
@@ -275,8 +278,7 @@
 \cs_generate_variant:Nn \akshar_convert:Nn { cn, Nx, cx }
 %    \end{macrocode}
 % \end{macro}
-% Time for some front-end macros that can be used directly in the \LaTeXe\ 
-% context.
+% \subsection{Front-end \LaTeXe\ macros}
 % \begin{macro}{\aksharStrLen}
 % Expands to the length of the string.
 %    \begin{macrocode}
