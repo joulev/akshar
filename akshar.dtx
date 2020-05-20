@@ -225,7 +225,8 @@
 % \subsection{Utilities}
 % ^^A Remove "This function is documented on page ??"
 % \ExplSyntaxOn
-% \cs_set_protected:Npn \__codedoc_print_documented: {}
+% \cs_set_protected:Npn \__codedoc_print_documented: 
+%   { \seq_gclear:N \g__codedoc_nested_names_seq }
 % \ExplSyntaxOff
 % \begin{macro}[TF]{\tl_if_in:No}
 % When we get to a character which is not the joining one, we need to know if 
