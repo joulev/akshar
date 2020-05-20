@@ -222,6 +222,35 @@
 \seq_new:N \l_@@_tmpb_seq
 %    \end{macrocode}
 % \end{variable}
+% \subsection{Messages}
+% In \cs{akshar_convert}, the argument needs to be a sequence variable. There 
+% will be an error if it isn't.
+% ^^A I use underscore here because my editor has a good support for it.
+%    \begin{macrocode}
+\msg_new:nnnn { akshar } { err_not_a_sequence_variable }
+  { #1 ~ is ~ not ~ a ~ valid ~ LaTeX3 ~ sequence ~ variable. }
+  {
+    You ~ have ~ requested ~ me ~ to ~ assign ~ some ~ value ~ to ~ the ~ 
+    control ~ sequence ~ #1, ~ but ~ it ~ is ~ not ~ a ~ valid ~ sequence ~ 
+    variable. ~ Read ~ the ~ documentation ~ of ~ expl3 ~ for ~ more ~ 
+    information. ~ Proceed ~ and ~ I ~ will ~ pretend ~ that ~ #1 ~ is ~ a ~ 
+    local ~ sequence ~ variable ~ (beware ~ that ~ unexpected ~ behaviours ~ 
+    may ~ occur).
+  }
+%    \end{macrocode}
+% In \cs{aksharStrChar}, we need to guard against accessing an `out-of-bound' 
+% character (like trying to get the 8th character in a 5-character string.)
+%    \begin{macrocode}
+\msg_new:nnnn { akshar } { err_character_out_of_bound }
+  { Character ~ index ~ out ~ of ~ bound }
+  {
+    You ~ are ~ trying ~ to ~ get ~ the ~ #2 ~ character ~ of ~ the ~ string ~ 
+    #1. ~ However ~ that ~ character ~ doesn't ~ exist. ~ Make ~ sure ~ that ~ 
+    you ~ use ~ a ~ number ~ between ~ and ~ not ~ including ~ 0 ~ and ~ #3, ~ 
+    so ~ that ~ I ~ can ~ return ~ a ~ good ~ output. ~ Proceed ~ and ~ I ~ 
+    will ~ return ~ \token_to_str:N \scan_stop:.
+  }
+%    \end{macrocode}
 % \subsection{Utilities}
 % ^^A Remove "This function is documented on page ??"
 % \ExplSyntaxOn
@@ -242,6 +271,14 @@
 \cs_generate_variant:Nn \seq_set_split:Nnn { Nxx }
 %    \end{macrocode}
 % \end{macro}
+% \begin{macro}{\msg_error:nnx, \msg_error:nnnnx}
+% Some variants of \pkg{l3msg} functions that we will need when issuing error 
+% messages.
+%    \begin{macrocode}
+\cs_generate_variant:Nn \msg_error:nnn { nnx }
+\cs_generate_variant:Nn \msg_error:nnnnn { nnnnx }
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}[TF]{\@@_var_if_global:N}
 % \begin{variable}{\c_@@_str_g_tl, \c_@@_str_seq_tl}
 % This conditional checks if |#1| is a global sequence variable or not. In other 
@@ -256,7 +293,8 @@
     \bool_if:nTF 
       { \exp_last_unbraced:Nf \use_iii:nnn { \cs_split_function:N #1 } }
       { 
-        \iow_term:n { It ~ is ~ a ~ function! }
+        \msg_error:nnx { akshar } { err_not_a_sequence_variable } 
+          { \token_to_str:N #1 }
         \prg_return_false:
       }
       {
@@ -267,17 +305,11 @@
         \tl_if_eq:NNTF \c_@@_str_seq_tl \l_@@_tmpb_tl
           {
             \tl_if_eq:NNTF \c_@@_str_g_tl \l_@@_tmpa_tl
-              {
-                \iow_term:n { It ~ is ~ a ~ global ~ variable }
-                \prg_return_true:
-              }
-              {
-                \iow_term:n { It ~ is ~ a ~ local ~ variable }
-                \prg_return_false:
-              }
+              { \prg_return_true: } { \prg_return_false: }
           }
           {
-            \iow_term:n { It ~ is ~ not ~ a ~ sequence ~ variable }
+            \msg_error:nnx { akshar } { err_not_a_sequence_variable } 
+              { \token_to_str:N #1 }
             \prg_return_false:
           }
       }
@@ -400,7 +432,18 @@
 \NewExpandableDocumentCommand \aksharStrChar {mm}
   {
     \akshar_convert:Nn \l_@@_tmpa_seq {#1}
-    \seq_item:Nn \l_@@_tmpa_seq {#2}
+    \bool_if:nTF
+      {
+        \int_compare_p:nNn { #2 } > { 0 } &&
+        \int_compare_p:nNn { #2 } < { 1 + \seq_count:N \l_@@_tmpa_seq }
+      }
+      { \seq_item:Nn \l_@@_tmpa_seq {#2} }
+      {
+        \msg_error:nnnnx { akshar } { err_character_out_of_bound }
+          { #1 } { #2th }
+          { \int_eval:n { 1 + \seq_count:N \l_@@_tmpa_seq } }
+        \scan_stop:
+      }
   }
 %    \end{macrocode}
 % \end{macro}
