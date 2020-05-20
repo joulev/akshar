@@ -213,11 +213,13 @@
 \seq_new:N \l_@@_char_seq
 %    \end{macrocode}
 % \end{variable}
-% \begin{variable}{\l_@@_tmp_tl, \l_@@_tmp_seq}
+% \begin{variable}{\l_@@_tmpa_tl, \l_@@_tmpb_tl, \l_@@_tmpa_seq, \l_@@_tmpb_seq}
 % Some temporary variables.
 %    \begin{macrocode}
-\tl_new:N \l_@@_tmp_tl
-\seq_new:N \l_@@_tmp_seq
+\tl_new:N \l_@@_tmpa_tl
+\tl_new:N \l_@@_tmpb_tl
+\seq_new:N \l_@@_tmpa_seq
+\seq_new:N \l_@@_tmpb_seq
 %    \end{macrocode}
 % \end{variable}
 % \subsection{Utilities}
@@ -232,6 +234,55 @@
 %    \begin{macrocode}
 \prg_generate_conditional_variant:Nnn \tl_if_in:Nn { No } { TF }
 %    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\seq_set_split:Nxx}
+% A variant we will need in \cs{@@_var_if_global}.
+%    \begin{macrocode}
+\cs_generate_variant:Nn \seq_set_split:Nnn { Nxx }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}[TF]{\@@_var_if_global:N}
+% \begin{variable}{\c_@@_str_g_tl, \c_@@_str_seq_tl}
+% This conditional checks if |#1| is a global sequence variable or not. In other 
+% words, it returns true iff |#1| is a control sequence in the format 
+% |\g_|\meta{name}|_seq|. If it is not a sequence variable, this function will 
+% (TODO) issue an error message.
+%    \begin{macrocode}
+\tl_const:Nx \c_@@_str_g_tl { \tl_to_str:n {g} }
+\tl_const:Nx \c_@@_str_seq_tl { \tl_to_str:n {seq} }
+\prg_new_conditional:Npnn \@@_var_if_global:N #1 { T, F, TF }
+  {
+    \bool_if:nTF 
+      { \exp_last_unbraced:Nf \use_iii:nnn { \cs_split_function:N #1 } }
+      { 
+        \iow_term:n { It ~ is ~ a ~ function! }
+        \prg_return_false:
+      }
+      {
+        \seq_set_split:Nxx \l_@@_tmpb_seq { \token_to_str:N _ }
+          { \exp_last_unbraced:Nf \use_i:nnn { \cs_split_function:N #1 } }
+        \seq_get_left:NN  \l_@@_tmpb_seq \l_@@_tmpa_tl
+        \seq_get_right:NN \l_@@_tmpb_seq \l_@@_tmpb_tl
+        \tl_if_eq:NNTF \c_@@_str_seq_tl \l_@@_tmpb_tl
+          {
+            \tl_if_eq:NNTF \c_@@_str_g_tl \l_@@_tmpa_tl
+              {
+                \iow_term:n { It ~ is ~ a ~ global ~ variable }
+                \prg_return_true:
+              }
+              {
+                \iow_term:n { It ~ is ~ a ~ local ~ variable }
+                \prg_return_false:
+              }
+          }
+          {
+            \iow_term:n { It ~ is ~ not ~ a ~ sequence ~ variable }
+            \prg_return_false:
+          }
+      }
+  }
+%    \end{macrocode}
+% \end{variable}
 % \end{macro}
 % ^^A Restore the status quo
 % \ExplSyntaxOn
@@ -282,9 +333,9 @@
 % It is a diacritic. We append the current diacritic to the last item of the 
 % sequence instead of pushing the diacritic to a new sequence item.
 %    \begin{macrocode}
-            \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
+            \seq_pop_right:NN \l_@@_char_seq \l_@@_tmpa_tl
             \seq_put_right:Nx \l_@@_char_seq 
-              { \l_@@_tmp_tl \l_@@_map_tl }
+              { \l_@@_tmpa_tl \l_@@_map_tl }
           }
           {
             \tl_if_eq:NNTF \l_@@_map_tl \c_@@_joining_tl
@@ -294,9 +345,9 @@
 % similar to the above case, but \cs{l_@@_prev_joining_bool} is set to true so 
 % that the next character is also appended to this item.
 %    \begin{macrocode}
-                \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
+                \seq_pop_right:NN \l_@@_char_seq \l_@@_tmpa_tl
                 \seq_put_right:Nx \l_@@_char_seq 
-                  { \l_@@_tmp_tl \l_@@_map_tl }
+                  { \l_@@_tmpa_tl \l_@@_map_tl }
                 \bool_set_true:N \l_@@_prev_joining_bool
               }
               {
@@ -306,9 +357,9 @@
 %    \begin{macrocode}
                 \bool_if:NTF \l_@@_prev_joining_bool
                   {
-                    \seq_pop_right:NN \l_@@_char_seq \l_@@_tmp_tl
+                    \seq_pop_right:NN \l_@@_char_seq \l_@@_tmpa_tl
                     \seq_put_right:Nx \l_@@_char_seq 
-                      { \l_@@_tmp_tl \l_@@_map_tl }
+                      { \l_@@_tmpa_tl \l_@@_map_tl }
                     \bool_set_false:N \l_@@_prev_joining_bool
                   }
                   {
@@ -318,11 +369,12 @@
           }
       }
 %    \end{macrocode}
-% Set |#1| to \cs{l_@@_char_seq}. The assignment is local, and I have not found 
-% a way to automatically pick \cs{seq_set_eq} or \cs{seq_gset_eq} based on the 
-% name of the sequence variable.
+% Set |#1| to \cs{l_@@_char_seq}. The package automatically determines whether 
+% the variable is a global one or a local one.
 %    \begin{macrocode}
-    \seq_set_eq:NN #1 \l_@@_char_seq
+    \@@_var_if_global:NTF #1
+      { \seq_gset_eq:NN #1 \l_@@_char_seq }
+      { \seq_set_eq:NN #1 \l_@@_char_seq }
   }
 %    \end{macrocode}
 % Generate variants that might be helpful for some.
@@ -336,8 +388,8 @@
 %    \begin{macrocode}
 \NewExpandableDocumentCommand \aksharStrLen {m}
   {
-    \akshar_convert:Nn \l_@@_tmp_seq {#1}
-    \seq_count:N \l_@@_tmp_seq
+    \akshar_convert:Nn \l_@@_tmpa_seq {#1}
+    \seq_count:N \l_@@_tmpa_seq
   }
 %    \end{macrocode}
 % \end{macro}
@@ -346,8 +398,8 @@
 %    \begin{macrocode}
 \NewExpandableDocumentCommand \aksharStrChar {mm}
   {
-    \akshar_convert:Nn \l_@@_tmp_seq {#1}
-    \seq_item:Nn \l_@@_tmp_seq {#2}
+    \akshar_convert:Nn \l_@@_tmpa_seq {#1}
+    \seq_item:Nn \l_@@_tmpa_seq {#2}
   }
 %    \end{macrocode}
 % \end{macro}
