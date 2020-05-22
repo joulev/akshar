@@ -1,3 +1,5 @@
+<!-- https://github.com/joulev/akshar -->
+
 # akshar
 
 An `expl3` package to deal with special characters in a Devanagari string.
