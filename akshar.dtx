@@ -131,6 +131,24 @@
 %\pkg{expl3}~returns~\tl_count:n { नमस्कार },~which~is~wrong.
 %\ExplSyntaxOff
 % \end{codeexample}
+% \begin{function}{\aksharStrHead}
+%   \begin{syntax}
+%     \cs{aksharStrHead} \marg{token list} \marg{n}
+%   \end{syntax}
+% Return the first character of the token list.
+% \end{function}
+% \begin{codeexample}[]
+%\aksharStrHead { मंळीममड }
+% \end{codeexample}
+% \begin{function}{\aksharStrTail}
+%   \begin{syntax}
+%     \cs{aksharStrTail} \marg{token list} \marg{n}
+%   \end{syntax}
+% Return the last character of the token list.
+% \end{function}
+% \begin{codeexample}[]
+%\aksharStrTail { ळीममडमं }
+% \end{codeexample}
 % \begin{function}{\aksharStrChar}
 %   \begin{syntax}
 %     \cs{aksharStrChar} \marg{token list} \marg{n}
@@ -310,7 +328,7 @@
 % character (like trying to get the 8th character in a 5-character string.)
 %    \begin{macrocode}
 \msg_new:nnnn { akshar } { err_character_out_of_bound }
-  { Character ~ index ~ out ~ of ~ bound }
+  { Character ~ index ~ out ~ of ~ bound. }
   {
     You ~ are ~ trying ~ to ~ get ~ the ~ #2 ~ character ~ of ~ the ~ 
     string ~ #1. ~ However ~ that ~ character ~ doesn't ~ exist. ~ 
@@ -318,6 +336,17 @@
     including ~ 0 ~ and ~ #3, ~ so ~ that ~ I ~ can ~ return ~ a ~ 
     good ~ output. ~ Proceed ~ and ~ I ~ will ~ return ~ 
     \token_to_str:N \scan_stop:.
+  }
+%    \end{macrocode}
+% In \cs{aksharStrHead} and \cs{aksharStrTail}, the string must not be blank.
+%    \begin{macrocode}
+\msg_new:nnnn { akshar } { err_string_empty }
+  { The ~ input ~ string ~ is ~ empty. }
+  {
+    To ~ get ~ the ~ #1 ~ character ~ of ~ a ~ string, ~ that ~ string ~ 
+    must ~ not ~ be ~ empty, ~ but ~ the ~ input ~ string ~ is ~ empty. 
+    Make ~ sure ~ the ~ string ~ contains ~ something, ~ or ~ proceed ~ 
+    and ~ I ~ will ~ use ~ \token_to_str:N \scan_stop:.
   }
 %    \end{macrocode}
 % \subsection{Utilities}
@@ -676,6 +705,38 @@
           { \int_eval:n { 1 + \seq_count:N \l_@@_tmpa_seq } }
         \scan_stop:
       }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\aksharStrHead}
+% Return the first character of the string.
+%    \begin{macrocode}
+\NewExpandableDocumentCommand \aksharStrHead {m}
+  {
+    \akshar_convert:Nn \l_@@_tmpa_seq {#1}
+    \int_compare:nNnTF { \seq_count:N \l_@@_tmpa_seq } = {0}
+      {
+        \msg_error:nnn { akshar } { err_character_out_of_bound }
+          { first }
+        \scan_stop:
+      }
+      { \seq_item:Nn \l_@@_tmpa_seq { 1 } }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\aksharStrTail}
+% Return the last character of the string.
+%    \begin{macrocode}
+\NewExpandableDocumentCommand \aksharStrTail {m}
+  {
+    \akshar_convert:Nn \l_@@_tmpa_seq {#1}
+    \int_compare:nNnTF { \seq_count:N \l_@@_tmpa_seq } = {0}
+      {
+        \msg_error:nnn { akshar } { err_character_out_of_bound }
+          { first }
+        \scan_stop:
+      }
+      { \seq_item:Nn \l_@@_tmpa_seq {\seq_count:N \l_@@_tmpa_seq} }
   }
 %    \end{macrocode}
 % \end{macro}
