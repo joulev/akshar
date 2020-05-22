@@ -143,6 +143,26 @@
 %It~is~not~\tl_item:nn { नमस्कार } {3}.
 %\ExplSyntaxOff
 % \end{codeexample}
+% \begin{function}{\aksharStrReplace, \aksharStrReplace*}
+%   \begin{syntax}
+%     \cs{aksharStrReplace} \marg{tl 1} \marg{tl 2} \marg{tl 3}
+%   \end{syntax}
+%   Replace all occurences of \meta{tl 2} in \meta{tl 1} with \meta{tl 3}, and 
+%   leaves the modified \meta{tl 1} in the input stream.
+%
+%   The starred variant will replace only the first occurence of \meta{tl 2}, 
+%   all others are left intact.
+% \end{function}
+% \begin{codeexample}[]
+%\ExplSyntaxOn
+%\pkg{expl3} ~ output:\par
+%\tl_set:Nn \l_tmpa_tl { मममडडमंळीममड }
+%\tl_replace_all:Nnn \l_tmpa_tl { म } { स्का }
+%\tl_use:N \l_tmpa_tl\par
+%\cs{aksharStrReplace} ~ output:\par
+%\aksharStrReplace { मममडडमंळीममड } { म } { स्का }
+%\ExplSyntaxOff
+% \end{codeexample}
 % \subsection{\pkg{expl3} functions}
 % This section assumes that you have a basic knowledge in \LaTeX3 programming.
 % All macros in \ref{latex2e-macros} directly depend on the following function,
@@ -214,13 +234,19 @@
 \seq_new:N \l_@@_char_seq
 %    \end{macrocode}
 % \end{variable}
-% \begin{variable}{\l_@@_tmpa_tl, \l_@@_tmpb_tl, \l_@@_tmpa_seq, \l_@@_tmpb_seq}
+% \begin{variable}{\l_@@_tmpa_tl, \l_@@_tmpb_tl, \l_@@_tmpa_seq, \l_@@_tmpb_seq,
+%                  \l_@@_tmpc_seq, \l_@@_tmpd_seq, \l_@@_tmpe_seq,
+%                  \l_@@_tmpa_int}
 % Some temporary variables.
 %    \begin{macrocode}
 \tl_new:N \l_@@_tmpa_tl
 \tl_new:N \l_@@_tmpb_tl
 \seq_new:N \l_@@_tmpa_seq
 \seq_new:N \l_@@_tmpb_seq
+\seq_new:N \l_@@_tmpc_seq
+\seq_new:N \l_@@_tmpd_seq
+\seq_new:N \l_@@_tmpe_seq
+\int_new:N \l_@@_tmpa_int
 %    \end{macrocode}
 % \end{variable}
 % \subsection{Messages}
@@ -453,6 +479,113 @@
 \cs_generate_variant:Nn \akshar_convert:Nn { cn, Nx, cx }
 %    \end{macrocode}
 % \end{macro}
+% \subsection{Other internal functions}
+% \begin{macro}{\@@_seq_push_seq:NN}
+% Append sequence |#1| to the end of sequence |#2|. A simple loop will do.
+%    \begin{macrocode}
+\cs_new:Npn \@@_seq_push_seq:NN #1 #2
+  { \seq_map_inline:Nn #2 { \seq_put_right:Nn #1 { ##1 } } }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\@@_replace_all:Nnnn}
+% This function replaces \emph{all} occurences of |#3| in |#2| by |#4|. The 
+% result is stored in a sequence variable |#1|.
+%
+% The algorithm used in this function: We will use \cs{l_@@_tmpa_int} to store 
+% the ``current position'' in the sequence of |#3|. At first it is set to |1|.
+%
+% We will store any subsequence of |#2| that may match |#3| to a temporary 
+% sequence. If it doesn't match, we push this temporary sequence to the output, 
+% but if it matches, |#4| is pushed instead.
+%
+% We loop over |#2|. For each of these loops, we need to make sure the 
+% \cs{l_@@_tmpa_int}-th item must indeed appear in |#3|. So we need to compare 
+% that with the length of |#3|.
+% \begin{itemize}
+%   \item If now \cs{l_@@_tmpa_int} is greater than the length of |#3|, the 
+%   whole of |#3| has been matched somewhere, so we reinitialize the integer to 
+%   |1| and push |#4| to the output.
+%
+%   Note that it is possible that the current character might be the start of 
+%   another match, so we have to compare it to the first character of |#3|. 
+%   If they are not the same, we may now push the current mapping character to 
+%   the output and proceed; otherwise the current character is pushed to the 
+%   temporary variable.
+%   \item Otherwise, we compare the current loop character of |#2| with the 
+%   \cs{l_@@_tmpa_int}-th character of |#3|.
+%   \begin{itemize}
+%     \item If they are the same, we still have a chance that it will match, so 
+%     we increase the ``iterator'' \cs{l_@@_tmpa_int} by |1| and push the 
+%     current mapping character to the temporary sequence.
+%     \item If they are the same, the temporary sequence won't match. Let's push 
+%     that sequence to the output and set the iterator back to |1|.
+%
+%     Note that now the iterator has changed. Who knows whether the current 
+%     character may start a match? Let's compare it to the first character of 
+%     |#3|, and do as in the case of \cs{l_@@_tmpa_int} is greater than the 
+%     length of |#3|.
+%   \end{itemize}
+% \end{itemize}
+% The complexity of this algorithm is $O(m\max(n,p))$, where $m,n,p$ are the 
+% lengths of the sequences created from |#2|, |#3| and |#4|. As |#3| and |#4| 
+% are generally short strings, this is (almost) linear to the length of the 
+% original sequence |#2|.
+%    \begin{macrocode}
+\cs_new:Npn \@@_replace_all:Nnnn #1 #2 #3 #4
+  {
+    \akshar_convert:Nn \l_@@_tmpc_seq {#2}
+    \akshar_convert:Nn \l_@@_tmpd_seq {#3}
+    \akshar_convert:Nn \l_@@_tmpe_seq {#4}
+    \seq_clear:N \l_@@_tmpa_seq
+    \seq_clear:N \l_@@_tmpb_seq
+    \int_set:Nn \l_@@_tmpa_int { 1 }
+    \seq_map_variable:NNn \l_@@_tmpc_seq \l_@@_map_tl
+      {
+        \int_compare:nNnTF 
+          { \l_@@_tmpa_int } = { 1 + \seq_count:N \l_@@_tmpd_seq }
+          {
+            \seq_clear:N \l_@@_tmpb_seq
+            \@@_seq_push_seq:NN \l_@@_tmpa_seq \l_@@_tmpe_seq
+            \int_set:Nn \l_@@_tmpa_int { 1 }
+            \tl_set:Nx \l_@@_tmpa_tl 
+              { \seq_item:Nn \l_@@_tmpd_seq { 1 } }
+            \tl_if_eq:NNTF \l_@@_map_tl \l_@@_tmpa_tl
+              {
+                \int_incr:N \l_@@_tmpa_int
+                \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl
+              }
+              { \seq_put_right:NV \l_@@_tmpa_seq \l_@@_map_tl }
+          }
+          {
+            \tl_set:Nx \l_@@_tmpa_tl 
+              { \seq_item:Nn \l_@@_tmpd_seq { \l_@@_tmpa_int } }
+            \tl_if_eq:NNTF \l_@@_map_tl \l_@@_tmpa_tl
+              {
+                \int_incr:N \l_@@_tmpa_int
+                \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl
+              }
+              {
+                \int_set:Nn \l_@@_tmpa_int { 1 }
+                \@@_seq_push_seq:NN \l_@@_tmpa_seq \l_@@_tmpb_seq
+                \seq_clear:N \l_@@_tmpb_seq
+                \tl_set:Nx \l_@@_tmpa_tl 
+                  { \seq_item:Nn \l_@@_tmpd_seq { 1 } }
+                \tl_if_eq:NNTF \l_@@_map_tl \l_@@_tmpa_tl
+                  {
+                    \int_incr:N \l_@@_tmpa_int
+                    \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl
+                  }
+                  { \seq_put_right:NV \l_@@_tmpa_seq \l_@@_map_tl }
+              }
+          }
+      }
+    \@@_seq_push_seq:NN \l_@@_tmpa_seq \l_@@_tmpb_seq
+    \@@_var_if_global:NTF #1
+      { \seq_gset_eq:NN #1 \l_@@_tmpa_seq }
+      { \seq_set_eq:NN #1 \l_@@_tmpa_seq }
+  }
+%    \end{macrocode}
+% \end{macro}
 % \subsection{Front-end \LaTeXe\ macros}
 % \begin{macro}{\aksharStrLen}
 % Expands to the length of the string.
@@ -482,6 +615,18 @@
           { \int_eval:n { 1 + \seq_count:N \l_@@_tmpa_seq } }
         \scan_stop:
       }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\aksharStrReplace}
+% Replace any apparence of |#3| of a string |#2| with another string |#4|.
+%    \begin{macrocode}
+\NewExpandableDocumentCommand \aksharStrReplace {smmm}
+  {
+    \IfBooleanTF {#1}
+      { \iow_log:n { Do ~ nothing } }
+      { \@@_replace_all:Nnnn \l_@@_tmpa_seq {#2} {#3} {#4} }
+    \seq_use:Nn \l_@@_tmpa_seq {}
   }
 %    \end{macrocode}
 % \end{macro}
