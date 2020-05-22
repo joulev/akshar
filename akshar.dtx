@@ -250,8 +250,8 @@
 %    \end{macrocode}
 % \end{variable}
 % \subsection{Messages}
-% In \cs{akshar_convert}, the argument needs to be a sequence variable. There 
-% will be an error if it isn't.
+% In \cs{akshar_convert:Nn} and friends, the argument needs to be a sequence 
+% variable. There will be an error if it isn't.
 % ^^A I use underscore here because my editor has a good support for it.
 %    \begin{macrocode}
 \msg_new:nnnn { akshar } { err_not_a_sequence_variable }
@@ -404,7 +404,7 @@
 %     \seq_gclear:N \g__codedoc_nested_names_seq
 %   }
 % \ExplSyntaxOff
-% \subsection{The \cs{akshar_convert} function}
+% \subsection{The \cs{akshar_convert:Nn} function and its variants}
 % \begin{macro}{\akshar_convert:Nn, \akshar_convert:cn,
 %               \akshar_convert:Nx, \akshar_convert:cx}
 % This converts |#2| to a sequence of \emph{true} Devanagari characters. The 
