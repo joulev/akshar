@@ -55,7 +55,7 @@
   listing options={basicstyle=\small,keywordstyle=\small,columns=fullflexible,
   numbers=left,numberstyle=\sffamily\tiny\color{gray},stepnumber=1,numbersep=5pt},#1}
 \pgfkeys{/tcb/.cd,code only/.code={\pgfkeysalso{listing only,grow to left by=-5mm}}}
-\hypersetup{linkcolor=mygreen,linktoc=page}
+\hypersetup{linkcolor=mygreen,urlcolor=myblue,linktoc=page}
 ^^A Hacking the index a bit.
 \IndexPrologue
   {
@@ -69,7 +69,8 @@
   }
 \usepackage{sectsty}
 \sectionfont{\LARGE\color{myred}}
-\subsectionfont{\large\color{myblue}} 
+\subsectionfont{\large\color{myblue}}
+\usepackage{fontawesome5}
 \let\bfseries\mdseries^^A For consistency
 \parindent=0pt\relax
 \IndexMin=100pt\relax
@@ -86,7 +87,11 @@
 %
 % \title{The \pkg{\aksharPackageName} package}
 % \author{Vu Van Dung}
-% \date{Version \aksharPackageVersion\ --- \aksharPackageDate}
+% \date^^A
+%   {^^A
+%     Version \aksharPackageVersion\ --- \aksharPackageDate\\[1ex]^^A
+%     {\small\faIcon{github}\quad\url{https://github.com/joulev/akshar}}^^A
+%   }
 %
 % \maketitle
 %
