@@ -257,12 +257,12 @@
 \msg_new:nnnn { akshar } { err_not_a_sequence_variable }
   { #1 ~ is ~ not ~ a ~ valid ~ LaTeX3 ~ sequence ~ variable. }
   {
-    You ~ have ~ requested ~ me ~ to ~ assign ~ some ~ value ~ to ~ the ~ 
-    control ~ sequence ~ #1, ~ but ~ it ~ is ~ not ~ a ~ valid ~ sequence ~ 
-    variable. ~ Read ~ the ~ documentation ~ of ~ expl3 ~ for ~ more ~ 
-    information. ~ Proceed ~ and ~ I ~ will ~ pretend ~ that ~ #1 ~ is ~ a ~ 
-    local ~ sequence ~ variable ~ (beware ~ that ~ unexpected ~ behaviours ~ 
-    may ~ occur).
+    You ~ have ~ requested ~ me ~ to ~ assign ~ some ~ value ~ to ~ 
+    the ~ control ~ sequence ~ #1, ~ but ~ it ~ is ~ not ~ a ~ valid ~ 
+    sequence ~ variable. ~ Read ~ the ~ documentation ~ of ~ expl3 ~ 
+    for ~ more ~ information. ~ Proceed ~ and ~ I ~ will ~ pretend ~ 
+    that ~ #1 ~ is ~ a ~ local ~ sequence ~ variable ~ (beware ~ that ~ 
+    unexpected ~ behaviours ~ may ~ occur).
   }
 %    \end{macrocode}
 % In \cs{aksharStrChar}, we need to guard against accessing an `out-of-bound' 
@@ -271,11 +271,12 @@
 \msg_new:nnnn { akshar } { err_character_out_of_bound }
   { Character ~ index ~ out ~ of ~ bound }
   {
-    You ~ are ~ trying ~ to ~ get ~ the ~ #2 ~ character ~ of ~ the ~ string ~ 
-    #1. ~ However ~ that ~ character ~ doesn't ~ exist. ~ Make ~ sure ~ that ~ 
-    you ~ use ~ a ~ number ~ between ~ and ~ not ~ including ~ 0 ~ and ~ #3, ~ 
-    so ~ that ~ I ~ can ~ return ~ a ~ good ~ output. ~ Proceed ~ and ~ I ~ 
-    will ~ return ~ \token_to_str:N \scan_stop:.
+    You ~ are ~ trying ~ to ~ get ~ the ~ #2 ~ character ~ of ~ the ~ 
+    string ~ #1. ~ However ~ that ~ character ~ doesn't ~ exist. ~ 
+    Make ~ sure ~ that ~ you ~ use ~ a ~ number ~ between ~ and ~ not ~ 
+    including ~ 0 ~ and ~ #3, ~ so ~ that ~ I ~ can ~ return ~ a ~ 
+    good ~ output. ~ Proceed ~ and ~ I ~ will ~ return ~ 
+    \token_to_str:N \scan_stop:.
   }
 %    \end{macrocode}
 % \subsection{Utilities}
@@ -460,7 +461,8 @@
                     \bool_set_false:N \l_@@_prev_joining_bool
                   }
                   {
-                    \seq_put_right:Nx \l_@@_char_seq { \l_@@_map_tl }
+                    \seq_put_right:Nx 
+                      \l_@@_char_seq { \l_@@_map_tl }
                   }
               }
           }
@@ -545,7 +547,8 @@
           { \l_@@_tmpa_int } = { 1 + \seq_count:N \l_@@_tmpd_seq }
           {
             \seq_clear:N \l_@@_tmpb_seq
-            \@@_seq_push_seq:NN \l_@@_tmpa_seq \l_@@_tmpe_seq
+            \@@_seq_push_seq:NN 
+              \l_@@_tmpa_seq \l_@@_tmpe_seq
             \int_set:Nn \l_@@_tmpa_int { 1 }
             \tl_set:Nx \l_@@_tmpa_tl 
               { \seq_item:Nn \l_@@_tmpd_seq { 1 } }
@@ -566,7 +569,8 @@
               }
               {
                 \int_set:Nn \l_@@_tmpa_int { 1 }
-                \@@_seq_push_seq:NN \l_@@_tmpa_seq \l_@@_tmpb_seq
+                \@@_seq_push_seq:NN 
+                  \l_@@_tmpa_seq \l_@@_tmpb_seq
                 \seq_clear:N \l_@@_tmpb_seq
                 \tl_set:Nx \l_@@_tmpa_tl 
                   { \seq_item:Nn \l_@@_tmpd_seq { 1 } }
@@ -575,7 +579,9 @@
                     \int_incr:N \l_@@_tmpa_int
                     \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl
                   }
-                  { \seq_put_right:NV \l_@@_tmpa_seq \l_@@_map_tl }
+                  { 
+                    \seq_put_right:NV \l_@@_tmpa_seq \l_@@_map_tl
+                  }
               }
           }
       }
@@ -605,8 +611,8 @@
     \akshar_convert:Nn \l_@@_tmpa_seq {#1}
     \bool_if:nTF
       {
-        \int_compare_p:nNn { #2 } > { 0 } &&
-        \int_compare_p:nNn { #2 } < { 1 + \seq_count:N \l_@@_tmpa_seq }
+        \int_compare_p:nNn {#2} > {0} &&
+        \int_compare_p:nNn {#2} < {1 + \seq_count:N \l_@@_tmpa_seq}
       }
       { \seq_item:Nn \l_@@_tmpa_seq { #2 } }
       {
