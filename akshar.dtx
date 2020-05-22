@@ -733,7 +733,7 @@
     \int_compare:nNnTF { \seq_count:N \l_@@_tmpa_seq } = {0}
       {
         \msg_error:nnn { akshar } { err_character_out_of_bound }
-          { first }
+          { last }
         \scan_stop:
       }
       { \seq_item:Nn \l_@@_tmpa_seq {\seq_count:N \l_@@_tmpa_seq} }
