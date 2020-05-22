@@ -27,6 +27,12 @@
 %
 % \fi
 % \iffalse
+%<*driver|package>
+\def\aksharPackageName{akshar}
+\def\aksharPackageVersion{0.1}
+\def\aksharPackageDate{2020/05/17}
+\def\aksharPackageDescription{Support for syllables in the Devanagari script (JV)}
+%</driver|package>
 %<*driver>
 \documentclass{l3doc}
 \renewcommand\MacroLongFont{\ttfamily\small}
@@ -65,25 +71,22 @@
 \sectionfont{\LARGE\color{myred}}
 \subsectionfont{\large\color{myblue}} 
 \let\bfseries\mdseries^^A For consistency
-\def\PackageName{\jobname}
-\def\PackageVersion{0.1}
-\def\PackageDate{2020/05/17}
 \parindent=0pt\relax
 \IndexMin=100pt\relax
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
 \begin{document}
-\DocInput{\PackageName.dtx}
+\DocInput{\aksharPackageName.dtx}
 \end{document}
 %</driver>
 % \fi
 %
 %
 %
-% \title{The \pkg{\PackageName} package}
+% \title{The \pkg{\aksharPackageName} package}
 % \author{Vu Van Dung}
-% \date{Version \PackageVersion\ --- \PackageDate}
+% \date{Version \aksharPackageVersion\ --- \aksharPackageDate}
 %
 % \maketitle
 %
@@ -255,8 +258,8 @@
 % \pkg{expl3}, are also loaded.
 %    \begin{macrocode}
 \RequirePackage{fontspec}
-\ProvidesExplPackage {akshar} {2020/05/17} {0.1}
-  {Support for syllables in the Devanagari script (JV)}
+\ProvidesExplPackage {\aksharPackageName} 
+  {\aksharPackageDate} {\aksharPackageVersion} {\aksharPackageDescription}
 %    \end{macrocode}
 % \subsection{Variable declarations}
 % \begin{variable}{\c_@@_joining_tl, \c_@@_diacritics_tl}
