@@ -41,8 +41,14 @@
 \setmainfont[Scale=0.9,Script=Devanagari]{Siddhanta}
 \setsansfont[Scale=1.1]{Linux Biolinum}
 \setmonofont[Scale=0.85]{Hack NF}
+\newfontfamily{\aksharDocFontFallback}{Siddhanta}
 \usepackage[libertine]{newtxmath}
 \renewcommand\meta[1]{$\langle${\itshape\rmfamily#1}$\rangle$}
+\usepackage{newunicodechar}
+\ExplSyntaxOn
+\tl_map_inline:nn { ािीुूेैोौंःॢृॅँ़ॆॊॉॎॏ॓ॕॖॗॄऺऻ꣠꣡꣢꣣꣤꣥꣦꣧꣨꣩꣪꣫꣬꣭꣮꣯꣰꣱ꣿ्कनमस्कारमंळीममडळीममडमंमममडडमंळीममडममंममडडमंळीममड }
+  { \newunicodechar{#1}{{\iffontchar\font`#1\else\aksharDocFontFallback\fi#1}} }
+\ExplSyntaxOff
 \usepackage{akshar}
 \usepackage[listings]{tcolorbox}
 \definecolor{myred}{HTML}{C0392B}
@@ -52,7 +58,7 @@
   sidebyside gap=1cm,lefthand width=6.5cm,lower separated=false,
   fontupper=\raggedleft,colback=white,colframe=white,
   verbatim ignore percent,grow to left by=7cm,text side listing,
-  listing options={basicstyle=\small,keywordstyle=\small,columns=fullflexible,
+  listing options={basicstyle=\ttfamily\small,keywordstyle=\ttfamily\small,columns=fullflexible,
   numbers=left,numberstyle=\sffamily\tiny\color{gray},stepnumber=1,numbersep=5pt},#1}
 \pgfkeys{/tcb/.cd,code only/.code={\pgfkeysalso{listing only,grow to left by=-5mm}}}
 \hypersetup{linkcolor=mygreen,urlcolor=myblue,linktoc=page}
