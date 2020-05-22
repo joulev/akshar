@@ -173,6 +173,36 @@
 %\aksharStrReplace* { ममंममडडमंळीममड } { मम } { स्का }
 %\ExplSyntaxOff
 % \end{codeexample}
+% \begin{function}{\aksharStrRemove, \aksharStrRemove*}
+%   \begin{syntax}
+%     \cs{aksharStrRemove} \marg{tl 1} \marg{tl 2}
+%   \end{syntax}
+%   Remove all occurences of \meta{tl 2} in \meta{tl 1}, and leaves the modified 
+%   \meta{tl 1} in the input stream.
+%
+%   The starred variant will remove only the first occurence of \meta{tl 2}, 
+%   all others are left intact.
+% \end{function}
+% \begin{codeexample}[]
+%\ExplSyntaxOn
+%\pkg{expl3} ~ output:\par
+%\tl_set:Nn \l_tmpa_tl { मममडडमंळीममड }
+%\tl_remove_all:Nn \l_tmpa_tl { म }
+%\tl_use:N \l_tmpa_tl\par
+%\cs{aksharStrRemove} ~ output:\par
+%\aksharStrRemove { मममडडमंळीममड } { म }
+%\ExplSyntaxOff
+% \end{codeexample}
+% \begin{codeexample}[]
+%\ExplSyntaxOn
+%\pkg{expl3} ~ output:\par
+%\tl_set:Nn \l_tmpa_tl { ममंममडडमंळीममड }
+%\tl_remove_once:Nn \l_tmpa_tl { मम }
+%\tl_use:N \l_tmpa_tl\par
+%\cs{aksharStrRemove*} ~ output:\par
+%\aksharStrRemove* { ममंममडडमंळीममड } { मम }
+%\ExplSyntaxOff
+% \end{codeexample}
 % \subsection{\pkg{expl3} functions}
 % This section assumes that you have a basic knowledge in \LaTeX3 programming.
 % All macros in \ref{latex2e-macros} directly depend on the following function,
@@ -650,7 +680,7 @@
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\aksharStrReplace, \aksharStrReplace*}
-% Replace any apparence of |#3| of a string |#2| with another string |#4|.
+% Replace occurences of |#3| of a string |#2| with another string |#4|.
 %    \begin{macrocode}
 \NewExpandableDocumentCommand \aksharStrReplace {smmm}
   {
@@ -662,6 +692,25 @@
       {
         \@@_replace:NnnnN \l_@@_tmpa_seq
           {#2} {#3} {#4} \c_false_bool
+      }
+    \seq_use:Nn \l_@@_tmpa_seq {}
+  }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\aksharStrRemove, \aksharStrRemove*}
+% Remove occurences of |#3| in |#2|. This is just a special case of 
+% \cs{aksharStrReplace}.
+%    \begin{macrocode}
+\NewExpandableDocumentCommand \aksharStrRemove {smm}
+  {
+    \IfBooleanTF {#1}
+      {
+        \@@_replace:NnnnN \l_@@_tmpa_seq
+          {#2} {#3} {} \c_true_bool
+      }
+      {
+        \@@_replace:NnnnN \l_@@_tmpa_seq
+          {#2} {#3} {} \c_false_bool
       }
     \seq_use:Nn \l_@@_tmpa_seq {}
   }
