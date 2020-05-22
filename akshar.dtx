@@ -163,6 +163,16 @@
 %\aksharStrReplace { मममडडमंळीममड } { म } { स्का }
 %\ExplSyntaxOff
 % \end{codeexample}
+% \begin{codeexample}[]
+%\ExplSyntaxOn
+%\pkg{expl3} ~ output:\par
+%\tl_set:Nn \l_tmpa_tl { ममंममडडमंळीममड }
+%\tl_replace_once:Nnn \l_tmpa_tl { मम } { स्का }
+%\tl_use:N \l_tmpa_tl\par
+%\cs{aksharStrReplace*} ~ output:\par
+%\aksharStrReplace* { ममंममडडमंळीममड } { मम } { स्का }
+%\ExplSyntaxOff
+% \end{codeexample}
 % \subsection{\pkg{expl3} functions}
 % This section assumes that you have a basic knowledge in \LaTeX3 programming.
 % All macros in \ref{latex2e-macros} directly depend on the following function,
@@ -236,7 +246,7 @@
 % \end{variable}
 % \begin{variable}{\l_@@_tmpa_tl, \l_@@_tmpb_tl, \l_@@_tmpa_seq, \l_@@_tmpb_seq,
 %                  \l_@@_tmpc_seq, \l_@@_tmpd_seq, \l_@@_tmpe_seq,
-%                  \l_@@_tmpa_int}
+%                  \l_@@_tmpa_int, \l_@@_tmpb_int}
 % Some temporary variables.
 %    \begin{macrocode}
 \tl_new:N \l_@@_tmpa_tl
@@ -247,6 +257,7 @@
 \seq_new:N \l_@@_tmpd_seq
 \seq_new:N \l_@@_tmpe_seq
 \int_new:N \l_@@_tmpa_int
+\int_new:N \l_@@_tmpb_int
 %    \end{macrocode}
 % \end{variable}
 % \subsection{Messages}
@@ -489,9 +500,10 @@
   { \seq_map_inline:Nn #2 { \seq_put_right:Nn #1 { ##1 } } }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\@@_replace_all:Nnnn}
-% This function replaces \emph{all} occurences of |#3| in |#2| by |#4|. The 
-% result is stored in a sequence variable |#1|.
+% \begin{macro}{\@@_replace:NnnnN}
+% If |#5| is \cs{c_false_bool}, this function replaces \emph{all} occurences of 
+% |#3| in |#2| by |#4| and stores the output sequence to |#1|. If |#5| is 
+% \cs{c_true_bool}, the replacement only happens \emph{once}.
 %
 % The algorithm used in this function: We will use \cs{l_@@_tmpa_int} to store 
 % the ``current position'' in the sequence of |#3|. At first it is set to |1|.
@@ -533,7 +545,7 @@
 % are generally short strings, this is (almost) linear to the length of the 
 % original sequence |#2|.
 %    \begin{macrocode}
-\cs_new:Npn \@@_replace_all:Nnnn #1 #2 #3 #4
+\cs_new:Npn \@@_replace:NnnnN #1 #2 #3 #4 #5
   {
     \akshar_convert:Nn \l_@@_tmpc_seq {#2}
     \akshar_convert:Nn \l_@@_tmpd_seq {#3}
@@ -541,37 +553,21 @@
     \seq_clear:N \l_@@_tmpa_seq
     \seq_clear:N \l_@@_tmpb_seq
     \int_set:Nn \l_@@_tmpa_int { 1 }
+    \int_set:Nn \l_@@_tmpb_int { 0 }
     \seq_map_variable:NNn \l_@@_tmpc_seq \l_@@_map_tl
       {
-        \int_compare:nNnTF 
-          { \l_@@_tmpa_int } = { 1 + \seq_count:N \l_@@_tmpd_seq }
+        \int_compare:nNnTF { \l_@@_tmpb_int } > { 0 }
+          { \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl }
           {
-            \seq_clear:N \l_@@_tmpb_seq
-            \@@_seq_push_seq:NN 
-              \l_@@_tmpa_seq \l_@@_tmpe_seq
-            \int_set:Nn \l_@@_tmpa_int { 1 }
-            \tl_set:Nx \l_@@_tmpa_tl 
-              { \seq_item:Nn \l_@@_tmpd_seq { 1 } }
-            \tl_if_eq:NNTF \l_@@_map_tl \l_@@_tmpa_tl
+            \int_compare:nNnTF 
+              {\l_@@_tmpa_int} = {1 + \seq_count:N \l_@@_tmpd_seq}
               {
-                \int_incr:N \l_@@_tmpa_int
-                \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl
-              }
-              { \seq_put_right:NV \l_@@_tmpa_seq \l_@@_map_tl }
-          }
-          {
-            \tl_set:Nx \l_@@_tmpa_tl 
-              { \seq_item:Nn \l_@@_tmpd_seq { \l_@@_tmpa_int } }
-            \tl_if_eq:NNTF \l_@@_map_tl \l_@@_tmpa_tl
-              {
-                \int_incr:N \l_@@_tmpa_int
-                \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl
-              }
-              {
-                \int_set:Nn \l_@@_tmpa_int { 1 }
-                \@@_seq_push_seq:NN 
-                  \l_@@_tmpa_seq \l_@@_tmpb_seq
+                \bool_if:NT {#5}
+                  { \int_incr:N \l_@@_tmpb_int }
                 \seq_clear:N \l_@@_tmpb_seq
+                \@@_seq_push_seq:NN 
+                  \l_@@_tmpa_seq \l_@@_tmpe_seq
+                \int_set:Nn \l_@@_tmpa_int { 1 }
                 \tl_set:Nx \l_@@_tmpa_tl 
                   { \seq_item:Nn \l_@@_tmpd_seq { 1 } }
                 \tl_if_eq:NNTF \l_@@_map_tl \l_@@_tmpa_tl
@@ -579,8 +575,37 @@
                     \int_incr:N \l_@@_tmpa_int
                     \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl
                   }
-                  { 
+                  {
                     \seq_put_right:NV \l_@@_tmpa_seq \l_@@_map_tl
+                  }
+              }
+              {
+                \tl_set:Nx \l_@@_tmpa_tl 
+                  {
+                    \seq_item:Nn \l_@@_tmpd_seq { \l_@@_tmpa_int }
+                  }
+                \tl_if_eq:NNTF \l_@@_map_tl \l_@@_tmpa_tl
+                  {
+                    \int_incr:N \l_@@_tmpa_int
+                    \seq_put_right:NV \l_@@_tmpb_seq \l_@@_map_tl
+                  }
+                  {
+                    \int_set:Nn \l_@@_tmpa_int { 1 }
+                    \@@_seq_push_seq:NN 
+                      \l_@@_tmpa_seq \l_@@_tmpb_seq
+                    \seq_clear:N \l_@@_tmpb_seq
+                    \tl_set:Nx \l_@@_tmpa_tl 
+                      { \seq_item:Nn \l_@@_tmpd_seq { 1 } }
+                    \tl_if_eq:NNTF \l_@@_map_tl \l_@@_tmpa_tl
+                      {
+                        \int_incr:N \l_@@_tmpa_int
+                        \seq_put_right:NV
+                          \l_@@_tmpb_seq \l_@@_map_tl
+                      }
+                      { 
+                        \seq_put_right:NV
+                          \l_@@_tmpa_seq \l_@@_map_tl
+                      }
                   }
               }
           }
@@ -624,14 +649,20 @@
   }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\aksharStrReplace}
+% \begin{macro}{\aksharStrReplace, \aksharStrReplace*}
 % Replace any apparence of |#3| of a string |#2| with another string |#4|.
 %    \begin{macrocode}
 \NewExpandableDocumentCommand \aksharStrReplace {smmm}
   {
     \IfBooleanTF {#1}
-      { \iow_log:n { Do ~ nothing } }
-      { \@@_replace_all:Nnnn \l_@@_tmpa_seq {#2} {#3} {#4} }
+      {
+        \@@_replace:NnnnN \l_@@_tmpa_seq
+          {#2} {#3} {#4} \c_true_bool
+      }
+      {
+        \@@_replace:NnnnN \l_@@_tmpa_seq
+          {#2} {#3} {#4} \c_false_bool
+      }
     \seq_use:Nn \l_@@_tmpa_seq {}
   }
 %    \end{macrocode}
