@@ -9,6 +9,7 @@
 ---------------------------------------------------------------------------
 Package:      akshar
 Author:       Vu Van Dung
+Description:  Support for syllables in the Devanagari script
 Repository:   https://github.com/joulev/akshar
 Bug tracker:  https://github.com/joulev/akshar/issues
 License:      The LaTeX Project Public License v1.3c or later
@@ -35,6 +36,12 @@ and the derived file            akshar.sty.
 \usedir{tex/latex/\jobname}
 \generate{
   \file{\jobname.sty}{\from{\jobname.dtx}{package}}
+}
+
+\nopreamble\nopostamble
+\usedir{doc/latex/\jobname}
+\generate{
+  \file{README.txt}{\from{\jobname.dtx}{readme}}
 }
 
 \endbatchfile
