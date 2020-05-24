@@ -6,7 +6,7 @@ An `expl3` package to deal with special characters in a Devanagari string.
 
 ## Installation
 
-This package is still experimental and not yet published to CTAN, so please wait for a while until it is available in TeX Live. However, if you want to use it *now* (not recommended), or if you want to contribute to the development of the package, you can clone the repository and run `l3build install` in the repository directory.
+The package is now published on [CTAN](https://ctan.org/pkg/akshar), so it should be already installed in your TeX distribution.
 
 ## How to use
 
