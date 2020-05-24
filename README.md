@@ -10,7 +10,7 @@ The package is now published on [CTAN](https://ctan.org/pkg/akshar), so it shoul
 
 ## How to use
 
-You can read the documentation (`akshar.pdf`) for more information about how to use the package. You can view it directly in GitHub, or you can visit [here](https://nbviewer.jupyter.org/github/joulev/akshar/blob/master/akshar.pdf).
+You can read the [documentation (`akshar.pdf`)](https://joulev.github.io/akshar/akshar.pdf) for more information about how to use the package.
 
 ## License
 
