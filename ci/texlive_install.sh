@@ -39,10 +39,11 @@ tlmgr install metafont mfware texlive-scripts
 
 # Contrib packages for testing
 tlmgr install \
-  expl3 \
-  xparse \
+  l3kernel \
+  l3packages \
   fontspec \
   newtxmath \
+  newtx \
   newunicodechar \
   pgf \
   tcolorbox \
@@ -50,7 +51,46 @@ tlmgr install \
   fontawesome5 \
   alphalph \
   infwarerr \
-  intcalc
+  intcalc \
+  amssymb \
+  amsfonts \
+  booktabs \
+  color \
+  colortbl \
+  hologo \
+  ltxcmds \
+  kvsetkeys \
+  kvdefinekeys \
+  pdftexcmds \
+  iftex \
+  kvoptions \
+  enumitem \
+  psnfss \
+  csquotes \
+  etoolbox \
+  fancyvrb \
+  underscore \
+  lmodern \
+  oberdiek \
+  atveryend \
+  hyperref \
+  pdfescape \
+  hycolor \
+  letltxmacro \
+  auxhook \
+  etexcmds \
+  url \
+  bitset \
+  bigintcalc \
+  atbegshi \
+  stringenc \
+  rerunfilecheck \
+  uniquecounter \
+  xkeyval \
+  kastrup \
+  xcolor \
+  refcount \
+  gettitlestring
 
 # Keep no backups (not required, simply makes cache bigger)
 tlmgr option -- autobackup 0
