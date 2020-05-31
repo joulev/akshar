@@ -47,7 +47,8 @@ tlmgr install \
   pgf \
   tcolorbox \
   sectsty \
-  fontawesome5
+  fontawesome5 \
+  alphalph
 
 # Keep no backups (not required, simply makes cache bigger)
 tlmgr option -- autobackup 0
