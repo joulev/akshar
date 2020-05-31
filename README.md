@@ -2,6 +2,8 @@
 
 # akshar
 
+[![Build Status](https://travis-ci.com/joulev/akshar.svg?branch=master)](https://travis-ci.com/joulev/akshar)
+
 An `expl3` package to deal with special characters in a Devanagari string.
 
 ## Installation
