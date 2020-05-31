@@ -1,4 +1,5 @@
 install:
+- source ./ci/font_install.sh
 - source ./ci/texlive_install.sh
 cache:
   directories:
