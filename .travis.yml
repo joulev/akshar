@@ -1,0 +1,8 @@
+install:
+- source ./ci/texlive_install.sh
+cache:
+  directories:
+  - /tmp/texlive
+  - $HOME/.texlive
+script:
+- l3build doc
