@@ -41,6 +41,7 @@ tlmgr install metafont mfware texlive-scripts
 tlmgr install \
   l3kernel \
   l3packages \
+  geometry \
   fontspec \
   newtxmath \
   newtx \
