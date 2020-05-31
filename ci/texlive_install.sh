@@ -43,7 +43,6 @@ tlmgr install \
   l3packages \
   geometry \
   fontspec \
-  newtxmath \
   newtx \
   newunicodechar \
   pgf \
@@ -53,10 +52,8 @@ tlmgr install \
   alphalph \
   infwarerr \
   intcalc \
-  amssymb \
   amsfonts \
   booktabs \
-  color \
   colortbl \
   hologo \
   ltxcmds \
@@ -71,7 +68,6 @@ tlmgr install \
   etoolbox \
   fancyvrb \
   underscore \
-  lmodern \
   oberdiek \
   atveryend \
   hyperref \
