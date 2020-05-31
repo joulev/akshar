@@ -55,10 +55,22 @@ License:      The LaTeX Project Public License v1.3c or later.
 \renewcommand\MacroLongFont{\ttfamily\small}
 \usepackage[margin=1cm,left=7cm,bottom=1.5cm]{geometry}
 \usepackage{fontspec}
-\setmainfont[Scale=0.9,Script=Devanagari]{Siddhanta}
-\setsansfont[Scale=1.1]{Linux Biolinum}
-\setmonofont[Scale=0.85]{Hack NF}
-\newfontfamily{\aksharDocFontFallback}{Siddhanta}
+\setmainfont{siddhanta}[Scale=0.9,
+                        Script=Devanagari,
+                        Extension=.ttf]
+\setsansfont{LinBiolinum}[Scale=1.1,
+                          Extension=.otf,
+                          UprightFont=*_R,
+                          BoldFont=*_RB,
+                          ItalicFont=*_RI]
+\setmonofont{HackNF}[Scale=0.85,
+                     Extension=.ttf,
+                     UprightFont=*_R,
+                     BoldFont=*_B,
+                     ItalicFont=*_I,
+                     BoldItalicFont=*_BI]
+\newfontfamily{\aksharDocFontFallback}{siddhanta}
+  [Scale=0.9,Script=Devanagari,Extension=.ttf]
 \usepackage[libertine]{newtxmath}
 \renewcommand\meta[1]{$\langle${\itshape\rmfamily#1}$\rangle$}
 \usepackage{newunicodechar}
@@ -302,9 +314,10 @@ License:      The LaTeX Project Public License v1.3c or later.
 \tl_const:Nn \c_@@_joining_tl { ्}
 \tl_const:Nn \c_@@_diacritics_tl
   {
-    ा,  ि,  ी,  ु,  ू,  े,  ै,  ो,  ौ,  ं,  ः,  ॢ,  ृ,  ॅ,  ँ,  ़,  ॆ,  ॊ, 
-    ॉ,  ॎ,  ॏ,  ॑,  ॒,  ॓,  ॔,  ॕ,  ॖ,  ॗ,  ॄ,  ऺ,  ऻ,  ꣠,  ꣡,  ꣢,  ꣣,  ꣤,  ꣥, 
-    ꣦,  ꣧,  ꣨,  ꣩,  ꣪,  ꣫,  ꣬,  ꣭,  ꣮,  ꣯,  ꣰,  ꣱,  ꣿ
+    ा,  ि,  ी,  ु,  ू,  े,  ै,  ो,  ौ,  ं,  ः,  ॢ,  ृ, 
+    ॅ,  ँ,  ़,  ॆ,  ॊ,  ॉ,  ॎ,  ॏ,  ॑,  ॒,  ॓,  ॔,  ॕ,  ॖ,  ॗ, 
+    ॄ,  ऺ,  ऻ,  ꣠,  ꣡,  ꣢,  ꣣,  ꣤,  ꣥,  ꣦,  ꣧,  ꣨,  ꣩,  ꣪, 
+    ꣫,  ꣬,  ꣭,  ꣮,  ꣯,  ꣰,  ꣱,  ꣿ
   }
 %    \end{macrocode}
 % \end{variable}

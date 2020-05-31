@@ -1,7 +1,4 @@
 install:
-- sudo mkdir /usr/share/fonts/opentype
-- sudo cp ./fonts/*.ttf /usr/share/fonts/truetype
-- sudo cp ./fonts/*.otf /usr/share/fonts/opentype
 - source ./ci/texlive_install.sh
 cache:
   directories:
