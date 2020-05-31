@@ -1,5 +1,6 @@
 install:
-- sudo apt install tree
+- sudo apt-get update
+- sudo apt-get install tree
 - source ./ci/texlive_install.sh
 cache:
   directories:
