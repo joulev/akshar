@@ -38,7 +38,16 @@ tlmgr install amsmath graphics tools
 tlmgr install metafont mfware texlive-scripts
 
 # Contrib packages for testing
-# nothing for now
+tlmgr install \
+  expl3 \
+  xparse \
+  fontspec \
+  newtxmath \
+  newunicodechar \
+  pgf \
+  tcolorbox \
+  sectsty \
+  fontawesome5
 
 # Keep no backups (not required, simply makes cache bigger)
 tlmgr option -- autobackup 0
