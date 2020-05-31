@@ -1,4 +1,5 @@
 install:
+- sudo apt install tree
 - source ./ci/texlive_install.sh
 cache:
   directories:
@@ -6,5 +7,5 @@ cache:
   - $HOME/.texlive
 script:
 - l3build unpack
-- kpsewhich akshar.sty
+- tree -a ./build
 - l3build doc
