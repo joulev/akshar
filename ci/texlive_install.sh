@@ -88,7 +88,9 @@ tlmgr install \
   xcolor \
   refcount \
   gettitlestring \
-  environ
+  environ \
+  trimspaces \
+  listings
 
 # Keep no backups (not required, simply makes cache bigger)
 tlmgr option -- autobackup 0
