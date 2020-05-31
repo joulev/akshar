@@ -87,7 +87,8 @@ tlmgr install \
   kastrup \
   xcolor \
   refcount \
-  gettitlestring
+  gettitlestring \
+  environ
 
 # Keep no backups (not required, simply makes cache bigger)
 tlmgr option -- autobackup 0
