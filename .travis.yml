@@ -8,5 +8,5 @@ cache:
   - $HOME/.texlive
 script:
 - l3build unpack
-- tree -a ./build
+- tree -a .
 - l3build doc
