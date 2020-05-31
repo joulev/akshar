@@ -49,7 +49,8 @@ tlmgr install \
   sectsty \
   fontawesome5 \
   alphalph \
-  infwarerr
+  infwarerr \
+  intcalc
 
 # Keep no backups (not required, simply makes cache bigger)
 tlmgr option -- autobackup 0
