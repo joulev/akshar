@@ -48,7 +48,8 @@ tlmgr install \
   tcolorbox \
   sectsty \
   fontawesome5 \
-  alphalph
+  alphalph \
+  infwarerr
 
 # Keep no backups (not required, simply makes cache bigger)
 tlmgr option -- autobackup 0
