@@ -6,4 +6,5 @@ cache:
   - $HOME/.texlive
 script:
 - l3build unpack
+- kpsewhich akshar.sty
 - l3build doc
