@@ -4,4 +4,4 @@ module = "akshar"
 typesetexe = "xelatex"
 excludefiles = {"README.md", "TODO.md"}
 textfiles = {"README.txt"}
-sourcefiles = {"fonts/*.ttf", "fonts/*.otf"}
+sourcefiles = {"fonts/*.ttf", "fonts/*.otf", "*.dtx", "*.ins"}
