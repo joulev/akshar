@@ -1,0 +1,23 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: Issue 2
+============================================================
+The sequence \l_tmpa_seq contains the items (without outer braces):
+>  {म}
+>  {मं}
+>  {म}
+>  {म}
+>  {ड}
+>  {ड}
+>  {मं}
+>  {ळी}
+>  {म}
+>  {म}
+>  {ड}
+>  {,}
+>  {मं}
+>  {ळी}
+>  {म}
+>  {म}.
+============================================================

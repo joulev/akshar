@@ -1,0 +1,15 @@
+\input{regression-test.tex}
+\documentclass{minimal}
+\usepackage{akshar}
+\begin{document}
+\START
+\ExplSyntaxOn
+
+\TEST {Issue ~ 2}
+  {
+    \akshar_convert:Nn \l_tmpa_seq { ममंममडडमंळीममड,मंळीमम }
+    \seq_log:N \l_tmpa_seq
+  }
+
+\ExplSyntaxOff
+\END
