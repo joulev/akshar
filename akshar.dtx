@@ -160,6 +160,10 @@ License:      The LaTeX Project Public License v1.3c or later.
 % front-end macros for some simple actions on the input string.
 %
 % \section{User manual}
+%
+% Due to the current implementation, \emph{all} of these macros and functions
+% are \emph{not} expandable.
+%
 % \subsection{\LaTeXe\ macros}\label{latex2e-macros}
 % \begin{function}{\aksharStrLen}
 %   \begin{syntax}
@@ -695,7 +699,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 % \begin{macro}{\aksharStrLen}
 % Expands to the length of the string.
 %    \begin{macrocode}
-\NewExpandableDocumentCommand \aksharStrLen {m}
+\NewDocumentCommand \aksharStrLen {m}
   {
     \akshar_convert:Nn \l_@@_tmpa_seq {#1}
     \seq_count:N \l_@@_tmpa_seq
@@ -705,7 +709,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 % \begin{macro}{\aksharStrChar}
 % Returns the $n$-th character of the string.
 %    \begin{macrocode}
-\NewExpandableDocumentCommand \aksharStrChar {mm}
+\NewDocumentCommand \aksharStrChar {mm}
   {
     \akshar_convert:Nn \l_@@_tmpa_seq {#1}
     \bool_if:nTF
@@ -726,7 +730,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 % \begin{macro}{\aksharStrHead}
 % Return the first character of the string.
 %    \begin{macrocode}
-\NewExpandableDocumentCommand \aksharStrHead {m}
+\NewDocumentCommand \aksharStrHead {m}
   {
     \akshar_convert:Nn \l_@@_tmpa_seq {#1}
     \int_compare:nNnTF { \seq_count:N \l_@@_tmpa_seq } = {0}
@@ -742,7 +746,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 % \begin{macro}{\aksharStrTail}
 % Return the last character of the string.
 %    \begin{macrocode}
-\NewExpandableDocumentCommand \aksharStrTail {m}
+\NewDocumentCommand \aksharStrTail {m}
   {
     \akshar_convert:Nn \l_@@_tmpa_seq {#1}
     \int_compare:nNnTF { \seq_count:N \l_@@_tmpa_seq } = {0}
@@ -758,7 +762,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 % \begin{macro}{\aksharStrReplace, \aksharStrReplace*}
 % Replace occurences of |#3| of a string |#2| with another string |#4|.
 %    \begin{macrocode}
-\NewExpandableDocumentCommand \aksharStrReplace {smmm}
+\NewDocumentCommand \aksharStrReplace {smmm}
   {
     \IfBooleanTF {#1}
       {
@@ -777,7 +781,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 % Remove occurences of |#3| in |#2|. This is just a special case of 
 % \cs{aksharStrReplace}.
 %    \begin{macrocode}
-\NewExpandableDocumentCommand \aksharStrRemove {smm}
+\NewDocumentCommand \aksharStrRemove {smm}
   {
     \IfBooleanTF {#1}
       {
