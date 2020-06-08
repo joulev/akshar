@@ -338,6 +338,14 @@ License:      The LaTeX Project Public License v1.3c or later.
 \seq_new:N \l_@@_char_seq
 %    \end{macrocode}
 % \end{variable}
+% \begin{variable}{\c_@@_str_g_tl, \c_@@_str_seq_tl, \c_@@_str_comma_tl}
+% Some self-descriptive constant variables.
+%    \begin{macrocode}
+\tl_const:Nx \c_@@_str_g_tl { \tl_to_str:n {g} }
+\tl_const:Nx \c_@@_str_seq_tl { \tl_to_str:n {seq} }
+\tl_const:Nx \c_@@_str_comma_tl { \tl_to_str:n {,} }
+%    \end{macrocode}
+% \end{variable}
 % \begin{variable}{\l_@@_tmpa_tl, \l_@@_tmpb_tl, \l_@@_tmpa_seq, \l_@@_tmpb_seq,
 %                  \l_@@_tmpc_seq, \l_@@_tmpd_seq, \l_@@_tmpe_seq,
 %                  \l_@@_tmpa_int, \l_@@_tmpb_int}
@@ -418,20 +426,28 @@ License:      The LaTeX Project Public License v1.3c or later.
 \cs_generate_variant:Nn \msg_error:nnnnn { nnnxx }
 %    \end{macrocode}
 % \end{macro}
+% \begin{macro}[TF]{\@@_tl_if_in_ncomma:NN}
+% This conditional is essentially \cs{tl_if_in:Nn}, but if |#2| is a comma this
+% conditional always return false.
+%    \begin{macrocode}
+\prg_new_conditional:Npnn \@@_tl_if_in_ncomma:NN #1 #2 { T, F, TF }
+  {
+    \tl_if_eq:NNTF \c_@@_str_comma_tl #2 { \prg_return_false: }
+      { \tl_if_in:NoTF #1 {#2} { \prg_return_true: } { \prg_return_false: } }
+  }
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}[TF]{\@@_var_if_global:N}
-% \begin{variable}{\c_@@_str_g_tl, \c_@@_str_seq_tl}
 % This conditional checks if |#1| is a global sequence variable or not. In other 
 % words, it returns true iff |#1| is a control sequence in the format 
 % |\g_|\meta{name}|_seq|. If it is not a sequence variable, this function will 
 % (TODO) issue an error message.
 %    \begin{macrocode}
-\tl_const:Nx \c_@@_str_g_tl { \tl_to_str:n {g} }
-\tl_const:Nx \c_@@_str_seq_tl { \tl_to_str:n {seq} }
 \prg_new_conditional:Npnn \@@_var_if_global:N #1 { T, F, TF }
   {
     \bool_if:nTF 
       { \exp_last_unbraced:Nf \use_iii:nnn { \cs_split_function:N #1 } }
-      { 
+      {
         \msg_error:nnx { akshar } { err_not_a_sequence_variable } 
           { \token_to_str:N #1 }
         \prg_return_false:
@@ -454,7 +470,6 @@ License:      The LaTeX Project Public License v1.3c or later.
       }
   }
 %    \end{macrocode}
-% \end{variable}
 % \end{macro}
 % \begin{macro}{\@@_int_append_ordinal:n}
 % Append st, nd, rd or th to interger |#1|. Will be needed in error messages.
@@ -512,7 +527,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 %    \begin{macrocode}
     \tl_map_variable:NNn {#2} \l_@@_map_tl
       {
-        \tl_if_in:NoTF \c_@@_diacritics_tl {\l_@@_map_tl}
+        \@@_tl_if_in_ncomma:NNTF \c_@@_diacritics_tl \l_@@_map_tl
           {
 %    \end{macrocode}
 % It is a diacritic. We append the current diacritic to the last item of the 
