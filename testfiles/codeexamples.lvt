@@ -1,0 +1,37 @@
+\input{regression-test.tex}
+\documentclass{minimal}
+\usepackage{akshar}
+\begin{document}
+\START
+\ExplSyntaxOn
+
+\cs_new:Npn \akshar_test:nn #1 #2
+  {
+    \TEST {#1}
+      {
+        \OMIT
+        \hbox_set:Nn \l_tmpa_box { #2 }
+        \TIMO
+        \box_show:N \l_tmpa_box
+      }
+  }
+
+\akshar_test:nn {aksharStrLen} { \aksharStrLen{ नमस्कार } }
+\akshar_test:nn {aksharStrHead} { \aksharStrHead { मंळीममड } }
+\akshar_test:nn {aksharStrTail} { \aksharStrTail { ळीममडमं } }
+\akshar_test:nn {aksharStrChar} { \aksharStrChar{ नमस्कार } { 3 } }
+\akshar_test:nn {aksharStrReplace}
+  { \aksharStrReplace { मममडडमंळीममड } { म } { स्का } }
+\akshar_test:nn {aksharStrReplace ~ starred}
+  { \aksharStrReplace* { ममंममडडमंळीममड } { मम } { स्का } }
+\akshar_test:nn {aksharStrRemove} { \aksharStrRemove { मममडडमंळीममड } { म } }
+\akshar_test:nn {aksharStrRemove ~ starred}
+  { \aksharStrRemove* { ममंममडडमंळीममड } { मम } }
+\TEST {\token_to_str:N \akshar_convert}
+  {
+    \akshar_convert:Nn \l_tmpa_seq { नमस्कार }
+    \seq_log:N \l_tmpa_seq
+  }
+
+\ExplSyntaxOff
+\END
