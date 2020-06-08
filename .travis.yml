@@ -6,3 +6,4 @@ cache:
   - $HOME/.texlive
 script:
 - l3build doc
+- l3build check
