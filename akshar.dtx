@@ -527,7 +527,8 @@ License:      The LaTeX Project Public License v1.3c or later.
 %    \begin{macrocode}
     \tl_map_variable:NNn {#2} \l_@@_map_tl
       {
-        \@@_tl_if_in_ncomma:NNTF \c_@@_diacritics_tl \l_@@_map_tl
+        \@@_tl_if_in_ncomma:NNTF
+          \c_@@_diacritics_tl \l_@@_map_tl
           {
 %    \end{macrocode}
 % It is a diacritic. We append the current diacritic to the last item of the 
