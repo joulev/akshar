@@ -278,8 +278,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 %     \cs{akshar_convert:Nn} \meta{seq var} \marg{token list}
 %   \end{syntax}
 %   This function converts \meta{token list} to a sequence of characters, that 
-%   sequence is stored in \meta{seq var}. The assignment to \meta{seq var} is 
-%   local to the current \TeX\ group.
+%   sequence is stored in \meta{seq var}.
 % \end{function}
 % \begin{codeexample}[]
 %\ExplSyntaxOn
@@ -498,8 +497,7 @@ License:      The LaTeX Project Public License v1.3c or later.
 % \begin{macro}{\akshar_convert:Nn, \akshar_convert:cn,
 %               \akshar_convert:Nx, \akshar_convert:cx}
 % This converts |#2| to a sequence of \emph{true} Devanagari characters. The 
-% sequence is set to |#1|, which should be a sequence variable. The assignment 
-% is local.
+% sequence is set to |#1|, which should be a sequence variable.
 %    \begin{macrocode}
 \cs_new:Npn \akshar_convert:Nn #1 #2
   {
