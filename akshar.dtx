@@ -25,7 +25,14 @@
 %                                 akshar.ins
 % and the derived file            akshar.sty.
 % ---------------------------------------------------------------------------
-%
+% The manual uses the following fonts:
+% * Siddhanta for serif font.
+%   Source: https://sites.google.com/site/bayaryn
+% * Biolinum for sans font.
+%   Source: Package libertine (https://ctan.org/pkg/libertine)
+% * Hack Nerd Font for monospace font.
+%   Source: https://www.nerdfonts.com/font-downloads
+% ---------------------------------------------------------------------------
 % \fi
 % \iffalse
 %<*internal>
@@ -55,14 +62,10 @@ License:      The LaTeX Project Public License v1.3c or later.
 \renewcommand\MacroLongFont{\ttfamily\small}
 \usepackage[margin=1cm,left=7cm,bottom=1.5cm]{geometry}
 \usepackage{fontspec}
+\usepackage{biolinum}
 \setmainfont{siddhanta}[Scale=0.9,
                         Script=Devanagari,
                         Extension=.ttf]
-\setsansfont{LinBiolinum}[Scale=1.1,
-                          Extension=.otf,
-                          UprightFont=*_R,
-                          BoldFont=*_RB,
-                          ItalicFont=*_RI]
 \setmonofont{HackNF}[Scale=0.85,
                      Extension=.ttf,
                      UprightFont=*_R,
